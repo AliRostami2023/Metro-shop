@@ -1,0 +1,48 @@
+{% extends 'shared/layout.html' %}
+{% load render_partial %}
+
+{% block title %}
+    dashboard
+{% endblock %}
+
+
+{% block content %}
+    <div>
+        {% render_partial 'panel.views.sidebar_profile_component' %}
+    </div>
+    <div>
+        <div class="bd-example-snippet bd-code-snippet">
+            <div class="bd-example m-0 border-0">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>first name :</td>
+                        <td>{{ user.first_name }}</td>
+                    </tr>
+                    <tr>
+                        <td>last name :</td>
+                        <td>{{ user.last_name }}</td>
+                    </tr>
+                    <tr>
+                        <td>user name :</td>
+                        <td>{{ user.username }}</td>
+                    </tr>
+                    <tr>
+                        <td>email :</td>
+                        <td>{{ user.email }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

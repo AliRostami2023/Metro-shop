@@ -1,0 +1,14 @@
+<aside>
+    <div class="sidebar-block mb30 overflow-h">
+        <div class="headline-left"><h3>Brands</h3></div>
+        <div class="form-group">
+            {% for brand in brands %}
+            	<div class="custom-control">
+                <label class="custom-control-label" for="Cameras"><a href="{% url 'brand_url_page' brand=brand.url_title %}">{{ brand.title }}
+                    ({{ brand.product_brand }})</a></label>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+</aside>

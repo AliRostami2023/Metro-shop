@@ -1,0 +1,68 @@
+<!--Start Footer -->
+<footer class="footer">
+    <div class="footer-block">
+        <div class="container">
+            <div class="row">
+                <!-- About -->
+                <div class="col-xxl-3 col-xl-3 col-lg-12 col-md-12 col-sm-12 col-xs col-block-style">
+                    <div class="footer-logo">
+                        <a href="{% url 'home-page' %}"><img class="img-fluid d-block mb10"
+                                                             src="/static/img/logo-footer.png"
+                                                             alt=""></a>
+                        <p class="mb5">
+                            {{ settings.about_us }}
+                        </p>
+                    </div>
+                </div>
+                <!-- End About -->
+
+                <!-- Latest -->
+                {% for box in footer_box %}
+                    <div class="col-xxl-2 col-xl-2 col-lg-3 col-md-6 col-sm-6 col-xs offset-xl-1 col-block-style f-mb30">
+                        <div class="posts">
+                            <div class="headline"><h2>{{ box.title }}</h2></div>
+                            <ul class="icons-list">
+                                {% for link in box.boxes.all %}
+                                    <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                                {% endfor %}
+
+                            </ul>
+                        </div>
+                    </div>
+                {% endfor %}
+
+                <!-- End Latest -->
+                <!-- Address -->
+                <div class="col-xxl-2 col-xl-2 col-lg-3 col-md-6 col-sm-6 col-xs col-block-style">
+                    <div class="headline"><h2>Store Information</h2></div>
+                    <address>
+                        {{ settings.address }} <br/>
+                        <hr>
+                        Phone: {{ settings.phone }} <br/>
+                        Fax: {{ settings.fax }} <br/>
+                        Email: <a href="#" class="email-add">{{ settings.email }}</a>
+                    </address>
+                </div>
+                <!-- End Address -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Start Copyright -->
+    <div class="copyright">
+        <div class="container">
+            <div class="row">
+                <div class="col-xxl-6  col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs">
+                    <p>{{ settings.copy_right }}</p>
+                </div>
+                <div class="col-xxl-6  col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs">
+                    <div class="payment-block">
+                        <img src="/static/img/payments.png" alt="" class="img-fluid d-block"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Copyright -->
+</footer>
+<!--End footer-->

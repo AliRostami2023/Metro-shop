@@ -1,0 +1,46 @@
+{% extends 'shared/layout.html' %}
+{% load render_partial %}
+
+
+{% block title %}
+    my orders
+{% endblock %}
+
+
+{% block content %}
+    <div>
+        {% render_partial 'panel.views.sidebar_profile_component' %}
+    </div>
+    <div>
+
+        <div class="bd-example-snippet bd-code-snippet">
+            <div class="bd-example m-0 border-0">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col">order id</th>
+                        <th scope="col">created date</th>
+                        <th scope="col">tracking code</th>
+                        <th scope="col"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for order in orders %}
+                    	<tr>
+                        <th scope="row">{{ order.id }}</th>
+                        <td>{{ order.created }}</td>
+                        <td>{{ order.track_code }}</td>
+                        <td>
+                            <a href="{% url 'detail-my-shopping-page' order_id=order.id %}" class="btn btn-outline-primary">detail</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+

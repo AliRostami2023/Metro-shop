@@ -1,0 +1,15 @@
+<aside>
+    <div class="sidebar-block mb30 overflow-h">
+        <div class="headline-left"><h3>Categories</h3></div>
+        <div class="form-group">
+            {% for category in categories %}
+                <div class="custom-control">
+{#                    <input class="custom-control-input mr10" type="checkbox" id="checkbox1">#}
+                    <label class="custom-control-label" for="Cameras"><a href="{% url 'category_url_page' cat=category.url_title %}">{{ category.title }}
+                        ({{ category.product_category }})</a></label>
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+</aside>

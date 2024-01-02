@@ -1,0 +1,128 @@
+{% extends 'shared/layout.html' %}
+
+
+{% block title %}
+    cart
+{% endblock %}
+
+
+{% block content %}
+    {% if cart.cart %}
+        <section class="page-heading-2">
+            <div class="container">
+                <div class="breadcrumb text-center text-white">
+                    <h1 class="page-title">Cart</h1>
+                    <a href="{% url 'home-page' %}">Home</a>
+                    <span class="delimeter"> &gt; </span>
+                    <a href="{% url 'product-list' %}">shop</a>
+                    <span class="delimeter"> &gt; </span>
+                    <span class="current">Cart</span>
+                </div>
+            </div>
+        </section>
+
+        <div class="main-contain">
+            <section class="shopping-cart-block">
+                <div class="container">
+                    <div class="row">
+                        <div class="xxl-8 col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs">
+                            <div class="table-responsive shopping-cart mb30">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>Product Name</th>
+                                        <th class="text-center">Quantity</th>
+                                        <th class="text-center">Subtotal</th>
+                                        <th class="text-center">Discount</th>
+                                        <th class="text-center">total</th>
+                                        <th class="text-center">Remove</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for item in cart %}
+                                        <tr>
+                                            <td>
+                                                <div class="product-item"><a class="product-thumb"
+                                                                             href="{{ item.product.get_absolute_url }}"><img
+                                                        src="{{ item.product.image.url }}" alt="Product"></a>
+                                                    <div class="product-info">
+                                                        <h4 class="product-title"><a
+                                                                href="{{ item.product.get_absolute_url }}">{{ item.product.title }}</a>
+                                                        </h4>
+                                                        <span><em>Size : </em>{{ item.size }}</span><br><span><em>Color : </em>{{ item.color }}</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="qty-addcart">
+                                                    <div class="quantity quantity-txt quantity-inp">
+                                                        {{ item.quantity }}
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center text-lg text-medium">
+                                                ${{ item.product.result_total_price }}</td>
+                                            {% if item.product.discount %}
+                                                <td class="text-center text-lg text-medium">-{{ item.product.discount }}%</td>
+                                            {% else %}
+                                                <td class="text-center text-lg text-medium">-</td>
+                                            {% endif %}
+                                            <td class="text-center text-lg text-medium">${{ item.total }}</td>
+                                            <td class="text-center"><a class="remove-from-cart"
+                                                                       href="{% url "delete-item-cart" item.unique_id %}"
+                                                                       data-toggle="tooltip"
+                                                                       title="" data-original-title="Remove item"><i
+                                                    class="far fa-trash-alt"></i></a></td>
+                                        </tr>
+                                    {% endfor %}
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="cart-total-btn d-flex">
+
+                                <a href="index-2.html" class="custom-btn">
+                                    <div class="btn-icon">Continue shopping</div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs">
+                            <div class="cart-totals bg-grey pall">
+                                <h2>Cart totals</h2>
+                                <div class="cart-summary-line">
+                                    <span class="summary-subtotal">{{ cart.cart_quantity }} items</span>
+                                </div>
+{#                                <div class="cart-summary-line">#}
+{#                                    <span class="summary-subtotal">Shipping</span>#}
+{#                                    <span class="summary-value">$7.00</span>#}
+{#                                </div>#}
+                                <div class="cart-total clearfix">
+                                    <span class="total-label">Total</span>
+                                    <span class="total-value">${{ cart.total }}</span>
+                                </div>
+                                <div class="cart-total-btn d-flex">
+
+                                    <a href="{% url 'checkout-cart' %}" class="custom-btn">
+                                        <div class="btn-icon">Proceed to checkout</div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    {% else %}
+        <br><br><br>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h3 style="text-align: center" class="text-warning">the basket is empty !!!</h3>
+                </div>
+                <br><br><br><br>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+

@@ -1,0 +1,222 @@
+{% extends 'shared/layout.html' %}
+{% load thumbnail %}
+
+
+{% block title %}
+    detail
+{% endblock %}
+
+
+{% block content %}
+    <section class="page-heading-2">
+        <div class="container">
+            <div class="breadcrumb text-center text-white">
+                <h1 class="page-title">{{ article.title }}</h1>
+                <a href="{% url 'home-page' %}">Home</a>
+                <span class="delimeter"> &gt; </span>
+                <span class="current">Blog Details</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="portfolio main-contain">
+        <div class="container">
+            <div class="row">
+
+
+                <div class="xxl-9 col-xl-9 col-lg-9 col-md-7 col-sm-7 col-xs">
+
+
+                    <div class="portfolio-single-image">
+                        {% thumbnail article.image '1160x600' crop='center' as im %}
+                        <img src="{{ im.url }}" class="img-fluid b-block">
+                        {% endthumbnail %}
+                    </div>
+                    <div class="portfolio-single-container">
+                        <div class="portfolio-single-title">{{ article.title }}</div>
+                        <div class="portfolio-single-desc mt30">
+                            <p>
+                                {{ article.body | safe }}
+                            </p>
+                        </div>
+                        <div class="portfolio-single-details">
+                            <ul class="portfolio-single-details-list">
+                                <li><strong>Author</strong>{{ article.author }}</li>
+                                <li><strong>Date</strong>{{ article.date }}</li>
+                                {% for category in article %}
+                                	<li><strong>Categories</strong>{{ category.title }},</li>
+                                {% endfor %}
+
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="standard-single-comments-list">
+                        <div class="media">
+                            <div class="media-left">
+                                <a href="#">
+                                    <img src="/static/img/blog/comment1.png" alt="" class="img-fluid b-block media-object">
+                                </a>
+                            </div>
+                            <div class="media-body">
+                                <div class="standard-comments-body">
+                                    <h4 class="media-heading"><a href="#">John Doe</a></h4>
+                                    <span><a href="#">September 12, 2021 at 10:10 am</a></span>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. </p>
+                                    <a href="#" class="custom-btn btn-comment-reply">Reply</a>
+                                </div>
+                                <div class="media">
+                                    <div class="media-left">
+                                        <a href="#">
+                                            <img src="/static/img/blog/comment2.png" alt=""
+                                                 class="img-fluid b-block media-object">
+                                        </a>
+                                    </div>
+                                    <div class="media-body">
+                                        <div class="standard-comments-body">
+                                            <h4 class="media-heading"><a href="#">John Doe</a></h4>
+                                            <span><a href="#">September 12, 2021 at 10:10 am</a></span>
+                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. </p>
+                                            <a href="#" class="custom-btn btn-comment-reply">Reply</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="media">
+                            <div class="media-left">
+                                <a href="#">
+                                    <img src="/static/img/blog/comment3.png" alt="" class="img-fluid b-block media-object">
+                                </a>
+                            </div>
+                            <div class="media-body">
+                                <div class="standard-comments-body">
+                                    <h4 class="media-heading"><a href="#">John Doe</a></h4>
+                                    <span><a href="#">September 12, 2021 at 10:10 am</a></span>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. </p>
+                                    <a href="#" class="custom-btn btn-comment-reply">Reply</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="contact_us_contact_form">
+
+                        <form name="contact-form" id="ContactForm" novalidate="novalidate">
+                            <div class="row">
+                                <div class="col-md-6 col-sm-12">
+                                    <input type="text" class="form-control" id="InputName" name="full_name"
+                                           placeholder="Enter Name">
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <input type="email" class="form-control" id="InputEmail" name="email"
+                                               placeholder="Enter Email">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <input type="text" class="form-control" id="InputMobile" name="mobile"
+                                           placeholder="Enter Mobile">
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" id="InputSubject" name="subject"
+                                               placeholder="Enter Subject">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 col-sm-12">
+                                    <div class="form-group">
+                                        <textarea class="form-control" id="InputMessage" name="message"
+                                                  placeholder="Enter Message"></textarea>
+                                    </div>
+                                    <button class="custom-btn" type="submit">Post Comment</button>
+
+
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+
+                <div class="xxl-3 col-xl-3 col-lg-3 col-md-5 col-sm-5 col-xs sidebar">
+                    <!-- Link List -->
+                    <div class="links mb30">
+                        <div class="headline"><h3>Categories</h3></div>
+                        <ul class="list-unstyled link-list">
+                            <li><a href="#">E-commerce</a></li>
+                            <li><a href="#">Business</a></li>
+                            <li><a href="#">Responsive</a></li>
+                            <li><a href="#">Portfolio</a></li>
+                            <li><a href="#">Corporate</a></li>
+                        </ul>
+                    </div>
+                    <!-- End Link List -->
+
+
+                    <div class="posts mb30">
+                        <div class="headline"><h3>Recent Posts</h3></div>
+                        <ul class="list-unstyled latest-list">
+                            <li>
+                                <a href="#">Marketing Plans</a>
+                                <small>January 8, 2021</small>
+                            </li>
+                            <li>
+                                <a href="#">Social Marketing</a>
+                                <small>March 01, 2021</small>
+                            </li>
+                            <li>
+                                <a href="#">Web Development</a>
+                                <small>April 29, 2021</small>
+                            </li>
+                        </ul>
+                    </div>
+
+
+                    <div class="posts mb30">
+                        <div class="headline"><h3>Recent Comments</h3></div>
+                        <ul class="list-unstyled latest-list">
+                            <li><i class="bi bi-chat"></i> <span>Craftdzine on </span> <a href="#">Marketing Plans</a>
+                            </li>
+                            <li>
+                                <i class="bi bi-chat"></i> <span>Craftdzine on </span> <a href="#">Social Marketing</a>
+
+                            </li>
+                            <li>
+                                <i class="bi bi-chat"></i> <span>Craftdzine on </span> <a href="#">Web Development</a>
+
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="posts mb30">
+                        <div class="headline"><h3>Archives</h3></div>
+                        <ul class="list-unstyled latest-list">
+                            <li><a href="#">February 2021</a></li>
+                            <li><a href="#">March 2021</a></li>
+                            <li><a href="#">April 2021</a></li>
+                            <li><a href="#">January 2021</a></li>
+
+                        </ul>
+                    </div>
+
+
+                    <!-- TAGS WIDGET -->
+                    <div class="widget">
+                        <div class="headline"><h3>Tags</h3></div>
+                        <div class="tags">
+                            <a href="#">bootstrap</a>
+                            <a href="#">business</a>
+                            <a href="#">corporate</a>
+                            <a href="#">e-commerce</a>
+                            <a href="#">portfolio</a>
+                            <a href="#">responsive</a>
+                        </div>
+                    </div>
+                    <!-- END TAGS WIDGET -->
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

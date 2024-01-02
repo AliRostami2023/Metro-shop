@@ -1,0 +1,147 @@
+{% extends 'shared/layout.html' %}
+{% load thumbnail %}
+
+
+{% block title %}
+    blog
+{% endblock %}
+
+
+{% block content %}
+    <section class="page-heading-2">
+        <div class="container">
+            <div class="breadcrumb text-center text-white">
+                <h1 class="page-title">Blog</h1>
+                <a href="{% url 'home-page' %}">Home</a>
+                <span class="delimeter"> &gt; </span>
+                <span class="current">Blog</span>
+            </div>
+        </div>
+    </section>
+
+    <div class="main-contain">
+        <div class="container">
+            <div class="row">
+                <div class="xxl-9 col-xl-9 col-lg-9 col-md-7 col-sm-7 col-xs">
+
+                    {% for article in object_list %}
+                        <div class="item mb30">
+                            <div class="image_blog">
+                                <div class="post-image">
+                                    {% thumbnail article.image '1160x600' crop='center' as im %}
+                                        <img src="{{ im.url }}" class="img-fluid d-block">
+                                    {% endthumbnail %}
+                                </div>
+                                <div class="img_blog_text">
+                                    <a href="{{ article.get_absolute_url }}"><h2>{{ article.title }}</h2></a>
+                                    <div class="blog-meta">
+                                        <span class="blog-date"><i class="bi bi-calendar3"></i>{{ article.date }}</span>
+                                        <span class="blog-comments"><i class="bi bi-chat"></i> 0 Comments</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                    <!-- Start Pagination-->
+                    <div class="cd-pagination">
+                        <ul class="pagination">
+                            {% if page_obj.has_previous %}
+                                <li><a href="?page={{ page_obj.previous_page_number }}"><i class="fa fa-angle-left"
+                                                                                           aria-hidden="true"></i></a>
+                                </li>
+                            {% endif %}
+                            {% for pageNumber in paginator.page_range %}
+                                <li class="{% if page_obj.number == pageNumber %} active {% endif %}"><a
+                                        href="?page={{ pageNumber }}">{{ pageNumber }}</a></li>
+                            {% endfor %}
+
+                            {% if page_obj.has_next %}
+                                <li><a href="?page={{ page_obj.next_page_number }}"><i class="fa fa-angle-right"
+                                                                                       aria-hidden="true"></i></a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    <!-- End Pagination-->
+                </div>
+
+                <div class="xxl-3 col-xl-3 col-lg-3 col-md-5 col-sm-5 col-xs sidebar">
+                    <!-- Link List -->
+                    <div class="links mb30">
+                        <div class="headline"><h3>Categories</h3></div>
+                        <ul class="list-unstyled link-list">
+                            <li><a href="#">E-commerce</a></li>
+                            <li><a href="#">Business</a></li>
+                            <li><a href="#">Responsive</a></li>
+                            <li><a href="#">Portfolio</a></li>
+                            <li><a href="#">Corporate</a></li>
+                        </ul>
+                    </div>
+                    <!-- End Link List -->
+
+
+                    <div class="posts mb30">
+                        <div class="headline"><h3>Recent Posts</h3></div>
+                        <ul class="list-unstyled latest-list">
+                            <li>
+                                <a href="#">Marketing Plans</a>
+                                <small>January 8, 2021</small>
+                            </li>
+                            <li>
+                                <a href="#">Social Marketing</a><!---https://t.me/sabzrea --->
+                                <small>March 01, 2021</small>
+                            </li>
+                            <li>
+                                <a href="#">Web Development</a>
+                                <small>April 29, 2021</small>
+                            </li>
+                        </ul>
+                    </div>
+
+
+                    <div class="posts mb30">
+                        <div class="headline"><h3>Recent Comments</h3></div>
+                        <ul class="list-unstyled latest-list">
+                            <li><i class="bi bi-chat"></i> <span>Craftdzine on </span> <a href="#">Marketing Plans</a>
+                            </li>
+                            <li>
+                                <i class="bi bi-chat"></i> <span>Craftdzine on </span> <a href="#">Social Marketing</a>
+                            </li>
+                            <li>
+                                <i class="bi bi-chat"></i> <span>Craftdzine on </span> <a href="#">Web Development</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="posts mb30">
+                        <div class="headline"><h3>Archives</h3></div>
+                        <ul class="list-unstyled latest-list">
+                            <li><a href="#">February 2021</a></li>
+                            <li><a href="#">March 2021</a></li>
+                            <li><a href="#">April 2021</a></li>
+                            <li><a href="#">January 2021</a></li>
+
+                        </ul>
+                    </div>
+
+
+                    <!-- TAGS WIDGET -->
+                    <div class="widget">
+                        <div class="headline"><h3>Tags</h3></div>
+                        <div class="tags">
+                            <a href="#">bootstrap</a>
+                            <a href="#">business</a>
+                            <a href="#">corporate</a>
+                            <a href="#">e-commerce</a>
+                            <a href="#">portfolio</a>
+                            <a href="#">responsive</a>
+                        </div>
+                    </div>
+                    <!-- END TAGS WIDGET -->
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,651 @@
+{% extends 'shared/layout.html' %}
+{% load thumbnail %}
+{% load ratings %}
+
+
+{% block title %}
+    home
+{% endblock %}
+
+
+{% block content %}
+    <!-- Slider Area -->
+    <section class="slider-area">
+        <ul class="owl-carousel owl-slider">
+            {% for slider in sliders %}
+                <li class="item">{% thumbnail slider.image '1920x600' crop='center' as im %}
+                    <a href="{{ slider.url }}">
+                        <img src="{{ im.url }}" alt=""/>
+                    </a>
+                {% endthumbnail %}
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+    <!-- End Slider Area -->
+
+    <!-- Start Categories -->
+    <section class="featured-categories home-main-contant-style">
+        <div class="container">
+            <div class="row">
+                <div class="col-xxl-3 col-xl-3 col-lg-6 col-md-6 col-sm-12 col-xs">
+                    <div class="single-category">
+                        <div class="cat-list">
+                            <h3 class="heading">Apple</h3>
+                            <ul>
+                                <li><a href="shop-gridside.html">SmartPhone</a></li>
+                                <li><a href="shop-gridside.html">Laptop</a></li>
+                                <li><a href="shop-gridside.html">Headphones</a></li>
+                                <li><a href="shop-gridside.html">MacBook Air</a></li>
+                                <li><a class="last" href="shop-gridside.html">View All</a></li>
+                            </ul>
+                        </div>
+                        <div class="cat-img">
+                            <img src="/static/img/shop/category/cat-1.jpg" alt="" class="img-fluid d-block">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xxl-3 col-xl-3 col-lg-6 col-md-6 col-sm-12 col-xs">
+                    <div class="single-category">
+                        <div class="cat-list">
+                            <h3 class="heading">Dell</h3>
+                            <ul>
+                                <li><a href="shop-gridside.html">Laptop</a></li>
+                                <li><a href="shop-gridside.html">Monitor</a></li>
+                                <li><a href="shop-gridside.html">Keyboards</a></li>
+                                <li><a href="shop-gridside.html">Webcams</a></li>
+                                <li><a class="last" href="shop-gridside.html">View All</a></li>
+                            </ul>
+                        </div>
+                        <div class="cat-img">
+                            <img src="/static/img/shop/category/cat-2.jpg" alt="" class="img-fluid d-block">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-xxl-3 col-xl-3 col-lg-6 col-md-6 col-sm-12 col-xs">
+
+                    <div class="single-category">
+
+                        <div class="cat-list">
+                            <h3 class="heading">Beats</h3>
+                            <ul>
+                                <li><a href="shop-gridside.html">RemoteTalk</a></li>
+                                <li><a href="shop-gridside.html">Speaker</a></li>
+                                <li><a href="shop-gridside.html">Audio Cable</a></li>
+                                <li><a href="shop-gridside.html">Headphones</a></li>
+                                <li><a class="last" href="shop-gridside.html">View All</a></li>
+                            </ul>
+                        </div>
+                        <div class="cat-img">
+                            <img src="/static/img/shop/category/cat-3.jpg" alt="" class="img-fluid d-block">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-xxl-3 col-xl-3 col-lg-6 col-md-6 col-sm-12 col-xs">
+                    <div class="single-category">
+                        <div class="cat-list">
+                            <h3 class="heading">LG</h3>
+                            <ul>
+                                <li><a href="shop-gridside.html">Television</a></li>
+                                <li><a href="shop-gridside.html">SmartPhone</a></li>
+                                <li><a href="shop-gridside.html">LG Laptop</a></li>
+                                <li><a href="shop-gridside.html">Headphones</a></li>
+                                <li><a class="last" href="shop-gridside.html">View All</a></li>
+                            </ul>
+                        </div>
+                        <div class="cat-img">
+                            <img src="/static/img/shop/category/cat-4.jpg" alt="" class="img-fluid d-block">
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Categories -->
+
+
+    <!-- Start Featured Product -->
+    <section class="home-product-style-1">
+        <div class="container">
+            <h3 class="section-title style2 text-center"><span>Featured Products</span></h3>
+            <div class="row">
+
+                {% for product in products %}
+                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 col-xs">
+                        <!-- Start Single Product -->
+                        <div class="single-product mt30">
+                            <div class="product-image">
+                                {% thumbnail product.image '204x204' crop='center' as im %}
+                                    <img src="{{ im.url }}" alt="" class="img-fluid d-block">
+                                {% endthumbnail %}
+                                {% if product.discount %}
+                                    <span class="product-sale">-{{ product.discount }}%</span>
+                                {% endif %}
+                                <a href="{{ product.get_absolute_url }}" class="custom-btn">
+                                    <div class="btn-icon"><i class="bi bi-cart-check"></i> detail</div>
+                                </a>
+                            </div>
+                            <div class="product-info">
+                                <span class="category"><a
+                                        href="{% url 'brand_url_page' brand=product.brand.url_title %}">{{ product.brand }}</a></span>
+                                <h4 class="title">
+                                    <a href="{{ product.get_absolute_url }}">{{ product.title }}</a>
+                                </h4>
+                                <ul class="list-inline product-review">
+                                    <li>{% ratings product %}</li>
+                                </ul>
+                                <div class="price">
+                                    {% if product.discount %}
+                                        <span>${{ product.result_total_price }}.00</span>
+                                        <span class="discount-price">${{ product.price }}.00</span>
+                                    {% else %}
+                                        <span>${{ product.price }}.00</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Single Product -->
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    <!-- End Featured Product -->
+
+    <!-- Start Banner -->
+    <section class="home-main-contant-style2">
+        <div class="container">
+            <div class="row">
+                {% for banner in banners %}
+                    <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs">
+                        <div class="banner rounded">
+                            <a href="javascript:void(0)">
+                                <div class="banner-img">
+                                    {% thumbnail banner.image '540x200' crop='center' as im %}
+                                        <img src="{{ im.url }}" alt="" class="img-fluid d-block">
+                                    {% endthumbnail %}
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+
+            </div>
+        </div>
+    </section>
+    <!-- End Banner -->
+
+    <!-- Start Banner -->
+    <section class="home-main-contant-style2">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="item">
+                        <div class="row">
+                            <div class="col-xxl-5 col-xl-5 col-lg-5 col-md-5 col-sm-12 col-xs pr-0">
+                                <!-- Big Image and Zoom -->
+                                <div class="big-image-style">
+                                    <div class="big-image" itemtype="https://schema.org/Product" itemscope="">
+                                        <a class="mp-lightbox cd-lightbox-image cd-lightbox-image"
+                                           href="/static/img/shop/products/product-31.jpg" title="">
+                                            <img id="product-image2" class="img-fluid d-block"
+                                                 src="/static/img/shop/products/product-31.jpg"
+                                                 data-zoom-image="/static/img/shop/products/product-31.jpg"
+                                                 alt="big image"/>
+                                            <span class="new-tag">New</span>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <!-- Small Images -->
+
+                                <div class="thumbs2" id="thumbs2">
+                                    <ul class="special-product owl-carousel owl-theme">
+                                        <li class="item"><a href="#a"
+                                                            data-image="/static/img/shop/products/product-31.jpg"
+                                                            data-zoom-image="/static/img/shop/products/product-31.jpg"
+                                                            class="elevatezoom-gallery active"> <img
+                                                class="img-fluid d-block" src="/static/img/shop/products/product-31.jpg"
+                                                alt="small image"/></a></li>
+                                        <li class="item"><a href="#a"
+                                                            data-image="/static/img/shop/products/product-16.jpg"
+                                                            data-zoom-image="/static/img/shop/products/product-16.jpg"
+                                                            class="elevatezoom-gallery"><img class="img-fluid d-block"
+                                                                                             src="/static/img/shop/products/product-16.jpg"
+                                                                                             alt="small image"/></a>
+                                        </li>
+                                        <li class="item"><a href="#a"
+                                                            data-image="/static/img/shop/products/product-27.jpg"
+                                                            data-zoom-image="/static/img/shop/products/product-27.jpg"
+                                                            class="elevatezoom-gallery"> <img class="img-fluid d-block"
+                                                                                              src="/static/img/shop/products/product-27.jpg"
+                                                                                              alt="small image"/></a>
+                                        </li>
+                                        <li class="item"><a href="#a"
+                                                            data-image="/static/img/shop/products/product-41.jpg"
+                                                            data-zoom-image="/static/img/shop/products/product-41.jpg"
+                                                            class="elevatezoom-gallery"><img class="img-fluid d-block"
+                                                                                             src="/static/img/shop/products/product-41.jpg"
+                                                                                             alt="small image"/></a>
+                                        </li>
+                                        <li class="item"><a href="#a"
+                                                            data-image="/static/img/shop/products/product-38.jpg"
+                                                            data-zoom-image="/static/img/shop/products/product-38.jpg"
+                                                            class="elevatezoom-gallery"><img class="img-fluid d-block"
+                                                                                             src="/static/img/shop/products/product-38.jpg"
+                                                                                             alt="small image"/></a>
+                                        </li>
+                                        <li class="item"><a href="#a"
+                                                            data-image="/static/img/shop/products/product-28.jpg"
+                                                            data-zoom-image="/static/img/shop/products/product-28.jpg"
+                                                            class="elevatezoom-gallery"> <img class="img-fluid d-block"
+                                                                                              src="/static/img/shop/products/product-28.jpg"
+                                                                                              alt="small image"/></a>
+                                        </li>
+                                        <li class="item"><a href="#a"
+                                                            data-image="/static/img/shop/products/product-04.jpg"
+                                                            data-zoom-image="/static/img/shop/products/product-04.jpg"
+                                                            class="elevatezoom-gallery"><img class="img-fluid d-block"
+                                                                                             src="/static/img/shop/products/product-04.jpg"
+                                                                                             alt="small image"/></a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <!-- end: Small Images -->
+                            </div>
+                            <div class="col-xxl-7 col-xl-7 col-lg-7 col-md-7 col-sm-12 col-xs align-self-center">
+                                <div class="offer-text-block ptb">
+                                    <div class="shop-product-heading">
+                                        <h2><a href="product-details.html">Sony Web Camera</a></h2>
+                                    </div>
+
+                                    <ul class="list-inline product-ratings mb15">
+                                        <li><i class="rating-selected fa fa-star"></i></li>
+                                        <li><i class="rating-selected fa fa-star"></i></li>
+                                        <li><i class="rating-selected fa fa-star"></i></li>
+                                        <li><i class="rating-selected  fa fa-star"></i></li>
+                                        <li><i class="rating-selected fa fa-star"></i></li>
+                                    </ul>
+
+
+                                    <ul class="list-inline shop-product-prices mb15">
+                                        <li class="shop-red">$133.99</li>
+                                    </ul>
+
+
+                                    <!-- countdown start -->
+                                    <div class="countdown clearfix"></div>
+                                    <!-- countdown end -->
+
+                                    <div class="banner-cart-btn">
+                                        <button type="submit" class="custom-btn"><i class="bi bi-cart-check"></i> Add to
+                                            Cart
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Banner -->
+
+
+    <!-- Start Cat Product -->
+    <section class="home-main-contant-style lookbook-style">
+        <div class="container">
+            <div class="headline"><h3>sort rating</h3></div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="lookbook-product-style">
+                        <div class="lookbook-cat owl-carousel owl-theme">
+                            {% for product in product_more_rating %}
+                                <div class="item">
+                                    <!-- Start Single Product -->
+                                    <div class="single-product">
+                                        <div class="product-image">
+                                            {% thumbnail product.image '354x354' crop='center' as im %}
+                                                <img src="{{ im.url }}" alt="" class="img-fluid d-block">
+                                            {% endthumbnail %}
+                                            {% if product.discount %}
+                                                <span class="product-sale">-{{ product.discount }}%</span>
+                                            {% endif %}
+                                            <a href="{{ product.get_absolute_url }}" class="custom-btn">
+                                                <div class="btn-icon"><i class="bi bi-cart-check"></i> detail</div>
+                                            </a>
+                                        </div>
+                                        <div class="product-info">
+                                            <span class="category"><a
+                                                    href="{% url 'brand_url_page' brand=product.brand.url_title %}">{{ product.brand }}</a></span>
+                                            <h4 class="title">
+                                                <a href="{{ product.get_absolute_url }}">{{ product.title }}</a>
+                                            </h4>
+                                            <ul class="list-inline product-review">
+                                                <li>{% ratings product %}</li>
+                                            </ul>
+                                            <div class="price">
+                                                {% if product.discount %}
+                                                    <span>${{ product.result_total_price }}.00</span>
+                                                    <span class="discount-price">${{ product.price }}.00</span>
+                                                {% else %}
+                                                    <span>${{ product.price }}.00</span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- End Single Product -->
+                                </div>
+                            {% endfor %}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <!-- End Cat Product -->
+
+    <!-- Start Cat Product -->
+    <section class="home-main-contant-style3 lookbook-style">
+        <div class="container">
+            <div class="headline"><h3>Top Gear VR</h3></div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="lookbook-product-style">
+                        <div class="lookbook-cat owl-carousel owl-theme">
+                            <div class="item">
+                                <!-- Start Single Product -->
+                                <div class="single-product">
+                                    <div class="product-image">
+                                        <img src="/static/img/shop/products/product-16.jpg" alt=""
+                                             class="img-fluid d-block">
+                                        <span class="new-tag">New</span>
+                                        <a href="product-details.html" class="custom-btn">
+                                            <div class="btn-icon"><i class="bi bi-cart-check"></i> Add to Cart</div>
+                                        </a>
+                                    </div>
+                                    <div class="product-info">
+                                        <span class="category"><a href="shop-gridside.html">Samsung</a></span>
+                                        <h4 class="title">
+                                            <a href="product-details.html">Samsung Gear VR</a>
+                                        </h4>
+                                        <ul class="list-inline product-review">
+                                            <li><i class="rating-selected fa fa-star"></i></li>
+                                            <li><i class="rating-selected fa fa-star"></i></li>
+                                            <li><i class="rating-selected fa fa-star"></i></li>
+                                            <li><i class="rating fa fa-star"></i></li>
+                                            <li><i class="rating fa fa-star"></i></li>
+                                        </ul>
+                                        <div class="price">
+                                            <span>$400.00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- End Single Product -->
+                            </div>
+                            <div class="item">
+                                <!-- Start Single Product -->
+                                <div class="single-product">
+                                    <div class="product-image">
+                                        <img src="/static/img/shop/products/product-44.jpg" alt=""
+                                             class="img-fluid d-block">
+                                        <span class="product-sale">-50%</span>
+                                        <a href="product-details.html" class="custom-btn">
+                                            <div class="btn-icon"><i class="bi bi-cart-check"></i> Add to Cart</div>
+                                        </a>
+                                    </div>
+                                    <div class="product-info">
+                                        <span class="category"><a href="shop-gridside.html">Google</a></span>
+                                        <h4 class="title">
+                                            <a href="product-details.html">Google Gear VR</a>
+                                        </h4>
+                                        <ul class="list-inline product-review">
+                                            <li><i class="rating-selected fa fa-star"></i></li>
+                                            <li><i class="rating-selected fa fa-star"></i></li>
+                                            <li><i class="rating-selected fa fa-star"></i></li>
+                                            <li><i class="rating-selected fa fa-star"></i></li>
+                                            <li><i class="rating fa fa-star"></i></li>
+                                        </ul>
+                                        <div class="price">
+                                            <span>$100.00</span>
+                                            <span class="discount-price">$200.00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- End Single Product -->
+                            </div>
+                            <div class="item">
+                                <!-- Start Single Product -->
+                                <div class="single-product">
+                                    <div class="product-image">
+                                        <img src="/static/img/shop/products/product-05.jpg" alt=""
+                                             class="img-fluid d-block">
+                                        <a href="product-details.html" class="custom-btn">
+                                            <div class="btn-icon"><i class="bi bi-cart-check"></i> Add to Cart</div>
+                                        </a>
+                                    </div>
+                                    <div class="product-info">
+                                        <span class="category"><a href="shop-gridside.html">Apple</a></span>
+                                        <h4 class="title">
+                                            <a href="product-details.html">Apple Gear VR</a>
+                                        </h4>
+                                        <ul class="list-inline product-review">
+                                            <li><i class="rating-selected fa fa-star"></i></li>
+                                            <li><i class="rating-selected fa fa-star"></i></li>
+                                            <li><i class="rating-selected fa fa-star"></i></li>
+                                            <li><i class="rating-selected fa fa-star"></i></li>
+                                            <li><i class="rating-selected fa fa-star"></i></li>
+                                        </ul>
+                                        <div class="price">
+                                            <span>$899.00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- End Single Product -->
+                            </div>
+
+                            <div class="item">
+                                <!-- Start Single Product -->
+                                <div class="single-product">
+                                    <div class="product-image">
+                                        <img src="/static/img/shop/products/product-43.jpg" alt=""
+                                             class="img-fluid d-block">
+                                        <span class="new-tag">New</span>
+                                        <a href="product-details.html" class="custom-btn">
+                                            <div class="btn-icon"><i class="bi bi-cart-check"></i> Add to Cart</div>
+                                        </a>
+                                    </div>
+                                    <div class="product-info">
+                                        <span class="category"><a href="shop-gridside.html">Dell</a></span>
+                                        <h4 class="title">
+                                            <a href="product-details.html">Dell Gear VR</a>
+                                        </h4>
+                                        <ul class="list-inline product-review">
+                                            <li><i class="rating-selected fa fa-star"></i></li>
+                                            <li><i class="rating-selected fa fa-star"></i></li>
+                                            <!-https://t.me/sabzrea ->
+                                            <li><i class="rating-selected fa fa-star"></i></li>
+                                            <li><i class="rating fa fa-star"></i></li>
+                                            <li><i class="rating fa fa-star"></i></li>
+                                        </ul>
+                                        <div class="price">
+                                            <span>$400.00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- End Single Product -->
+                            </div>
+                            <div class="item">
+                                <!-- Start Single Product -->
+                                <div class="single-product">
+                                    <div class="product-image">
+                                        <img src="/static/img/shop/products/product-42.jpg" alt=""
+                                             class="img-fluid d-block">
+                                        <span class="product-sale">-50%</span>
+                                        <a href="product-details.html" class="custom-btn">
+                                            <div class="btn-icon"><i class="bi bi-cart-check"></i> Add to Cart</div>
+                                        </a>
+                                    </div>
+                                    <div class="product-info">
+                                        <span class="category"><a href="shop-gridside.html">HP</a></span>
+                                        <h4 class="title">
+                                            <a href="product-details.html">HP Gear VR</a>
+                                        </h4>
+                                        <ul class="list-inline product-review">
+                                            <li><i class="rating-selected fa fa-star"></i></li>
+                                            <li><i class="rating-selected fa fa-star"></i></li>
+                                            <li><i class="rating-selected fa fa-star"></i></li>
+                                            <li><i class="rating-selected fa fa-star"></i></li>
+                                            <li><i class="rating fa fa-star"></i></li>
+                                        </ul>
+                                        <div class="price">
+                                            <span>$100.00</span>
+                                            <span class="discount-price">$200.00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- End Single Product -->
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </section>
+    <!-- End Cat Product -->
+
+    <!--Start Blog -->
+    <section class="clearfix  home-main-contant-style3 blog-slider-block">
+        <div class="container">
+            <div class="headline"><h3>Latest News</h3></div>
+            <div class="blog-slider owl-carousel">
+                <div class="item">
+                    <div class="image_blog">
+                        <div class="post-image"><img alt="" src="/static/img/blog/blog-img-1.jpg"
+                                                     class="img-fluid d-block">
+                        </div>
+                        <div class="img_blog_text">
+                            <a href="#"><h2>New Samsung Gear VR</h2></a>
+                            <div class="blog-meta">
+                                <span class="blog-date"><i class="bi bi-calendar3"></i> April 28, 2021</span>
+                                <span class="blog-comments"><i class="bi bi-chat"></i> 0 Comments</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="item">
+                    <div class="image_blog">
+                        <div class="post-image"><img alt="" src="/static/img/blog/blog-img-4.jpg"
+                                                     class="img-fluid d-block">
+                        </div>
+                        <div class="img_blog_text">
+                            <a href="#"><h2>Google Smart Speaker for Home</h2></a>
+                            <div class="blog-meta">
+                                <span class="blog-date"><i class="bi bi-calendar3"></i> April 28, 2021</span><!-https://t.me/sabzrea
+                                ->
+                                <span class="blog-comments"><i class="bi bi-chat"></i> 0 Comments</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="item">
+                    <div class="image_blog">
+                        <div class="post-image"><img alt="" src="/static/img/blog/blog-img-3.jpg"
+                                                     class="img-fluid d-block">
+                        </div>
+                        <div class="img_blog_text">
+                            <a href="#"><h2>Drone HD Camera</h2></a>
+                            <div class="blog-meta">
+                                <span class="blog-date"><i class="bi bi-calendar3"></i> April 28, 2021</span>
+                                <span class="blog-comments"><i class="bi bi-chat"></i> 0 Comments</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="item">
+                    <div class="image_blog">
+                        <div class="post-image"><img alt="" src="/static/img/blog/blog-img-5.jpg"
+                                                     class="img-fluid d-block">
+                        </div>
+                        <div class="img_blog_text">
+                            <a href="#"><h2>Apple Watch Series 6</h2></a>
+                            <div class="blog-meta">
+                                <span class="blog-date"><i class="bi bi-calendar3"></i> April 28, 2021</span>
+                                <span class="blog-comments"><i class="bi bi-chat"></i> 0 Comments</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="item">
+                    <div class="image_blog">
+                        <div class="post-image"><img alt="" src="/static/img/blog/blog-img-2.jpg"
+                                                     class="img-fluid d-block">
+                        </div>
+                        <div class="img_blog_text">
+                            <a href="#"><h2>Wireless Game Controller</h2></a>
+                            <div class="blog-meta">
+                                <span class="blog-date"><i class="bi bi-calendar3"></i> April 28, 2021</span>
+                                <span class="blog-comments"><i class="bi bi-chat"></i> 0 Comments</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--End Blog -->
+
+    <section class="parallax-shop-1">
+        <div class="container">
+            <div class="brand-slider owl-carousel">
+                <div class="item">
+                    <img alt="" src="/static/img/shop/category/cat-1.jpg" class="img-fluid d-block">
+                </div>
+                <div class="item">
+                    <img alt="" src="/static/img/shop/category/cat-2.jpg" class="img-fluid d-block">
+                </div>
+                <div class="item">
+                    <img alt="" src="/static/img/shop/category/cat-3.jpg" class="img-fluid d-block">
+                </div>
+                <div class="item">
+                    <img alt="" src="/static/img/shop/category/cat-4.jpg" class="img-fluid d-block">
+                </div>
+                <div class="item">
+                    <img alt="" src="/static/img/shop/category/cat-1.jpg" class="img-fluid d-block">
+                </div>
+
+                <div class="item">
+                    <img alt="" src="/static/img/shop/category/cat-2.jpg" class="img-fluid d-block">
+                </div>
+
+                <div class="item">
+                    <img alt="" src="/static/img/shop/category/cat-3.jpg" class="img-fluid d-block">
+                </div>
+
+                <div class="item">
+                    <img alt="" src="/static/img/shop/category/cat-4.jpg" class="img-fluid d-block">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="cd-heading-arrow heading-title heading-arrow-top"></div>
+
+{% endblock %}
+

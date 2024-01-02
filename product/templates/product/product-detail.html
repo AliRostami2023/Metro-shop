@@ -1,0 +1,667 @@
+{% extends 'shared/layout.html' %}
+{% load ratings %}
+
+{% block title %}
+    detail
+{% endblock %}
+
+
+{% block content %}
+    <div class="main-contain">
+        <section class="shop-product">
+            <div class="container">
+                <div class="row">
+                    <!--Image Block-->
+                    <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12">
+
+                        <!-- Big Image and Zoom -->
+                        <div class="big-image-style">
+                            <div class="big-image" itemtype="https://schema.org/Product" itemscope="">
+
+                                <a class="mp-lightbox cd-lightbox-image cd-lightbox-image"
+                                   href="{{ product.image.url }}">
+                                    <img id="product-image" class="img-fluid d-block"
+                                         src="{{ product.image.url }}"
+                                         data-zoom-image="{{ product.image.url }}" alt="big image">
+                                    {% if product.discount %}
+                                        <span class="new-tag">-{{ product.discount }}%</span>
+                                    {% endif %}
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Small Images -->
+
+                        <div class="thumbs" id="thumbs">
+                            <div class="flexslider" id="main_thumbs">
+                                <div class="flex-viewport">
+
+                                </div>
+                                <div class="flex-viewport" style="overflow: hidden; position: relative;">
+                                    <ul class="slides" style="width: 1600%; margin-left: 0px;">
+                                        {% for image in product.images.all %}
+                                            <li style="width: 80px; margin-right: 10px; float: left; display: block;"><a
+                                                    href="#a" data-image="{{ image.image.url }}"
+                                                    data-zoom-image="{{ image.image.url }}"
+                                                    class="elevatezoom-gallery active"><img class="img-fluid d-block"
+                                                                                            src="{{ image.image.url }}"
+                                                                                            alt="small image"
+                                                                                            draggable="false"></a></li>
+                                        {% endfor %}
+
+                                    </ul>
+                                </div>
+                                <ul class="flex-direction-nav">
+                                    <li class="flex-nav-prev"><a class="flex-prev flex-disabled" href="#" tabindex="-1">Previous</a>
+                                    </li>
+                                    <li class="flex-nav-next"><a class="flex-next" href="#">Next</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- end: Small Images -->
+
+
+                        <!-- end: Big Image and Zoom -->
+
+                    </div>
+                    <!--Image Block-->
+                    <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12">
+                        <!-- START Breadcumb -->
+                        <section class="page-heading">
+                            <div class="breadcrumb">
+                                <a href="{% url 'home-page' %}">Home </a>
+                                <span class="delimeter"><i class="bi bi-chevron-right"></i></span>
+                                {% for category in product.category.all %}
+                                    {% if product.parents %}
+                                        <span class="current">{{ category.title }}</span>
+                                    {% endif %}
+                                {% endfor %}
+                                <span class="delimeter"><i class="bi bi-chevron-right"></i></span>
+                                <span class="current">{{ product.title }}</span>
+                            </div>
+
+                        </section>
+                        <!-- END Breadcumb -->
+                        <div class="shop-product-heading">
+                            <h2>{{ product.title }}</h2>
+                        </div>
+
+                        <ul class="list-inline product-ratings mb15">
+                            <li>{% ratings product %}</li>
+                        </ul>
+
+                        <ul class="product-meta mb15">
+                            <li>Manufacturer : <a href="{% url 'brand_url_page' brand=product.brand.url_title %}">{{ product.brand }}</a></li>
+                            <li class="product-meta-availability">Availability :
+                                {% if product.availability %}
+                                    <span class="text-success">In Stock </span> {{ product.availability }} items(s)
+                                {% else %}
+                                    <span class="text-warning">Not available </span>
+                                {% endif %}
+                            </li>
+                            <li>Product Code : {{ product.id }}</li>
+                        </ul>
+
+                        <p class="mb15">
+                            {{ product.short_body | safe }}
+                        </p>
+                        <form method="post" action="{% url 'add-product-cart' pk=product.id %}">
+                        {% csrf_token %}
+                            <div class="product-filter-content advanced_search mb30">
+                                <ul class="view-mode">
+                                    <h3 class="shop-product-title">Size</h3>
+                                    <li class="search_select">
+                                        <div class="nice-select s_select" tabindex="0">
+                                            <span class="current">Choose Your Size</span>
+                                            <select name="size" class="list">
+                                                {% for size in product.size.all %}
+                                                    <option name="size" value="{{ size.name }}" class="option">{{ size.name }}</option>
+                                                {% endfor %}
+
+                                            </select>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+
+
+                            <div class="product-filter-content advanced_search mb30">
+                                <ul class="view-mode">
+                                    <h3 class="shop-product-title">color</h3>
+                                    <li class="search_select">
+                                        <div class="nice-select s_select" tabindex="0">
+                                            <span class="current">Choose Your color</span>
+                                            <select name="color" class="list">
+                                                {% for color in product.color.all %}
+                                                    <option name="color" value="{{ color.name }}" class="option">{{ color.name }}</option>
+                                                {% endfor %}
+
+                                            </select>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="qty-addcart">
+                                <ul class="list-inline shop-product-prices mb30">
+                                    {% if product.discount %}
+                                        <li class="shop-red">${{ product.result_total_price }}.00</li>
+                                    {% else %}
+                                        <li class="shop-red">${{ product.price }}.00</li>
+                                    {% endif %}
+                                </ul>
+
+                                <div class="quantity quantity-txt quantity-inp">
+                                    <button type="button" class="qty qtyminus">-</button>
+                                    <input type="text" class="quantity-input quantity-field"
+                                           name="p_quantity" min="1" value="1">
+                                    <button type="button" class="quantity-txt qty qtyplus">+</button>
+                                </div>
+
+                                <button type="submit" class="custom-btn ml15">Add to Cart</button>
+                            </div>
+                        </form>
+                        <br>
+                    </div>
+                    <div class="col-xl-2 col-lg-2 col-md-12 col-sm-12">
+                        <div class="represent mb30">
+                            <div class="item_represent">
+                                <i class="bi bi-truck"></i>
+                                <div class="description">
+                                    <span>FREE SHIPPING</span>
+                                    <small>Free shipping on all orders</small>
+                                </div>
+                            </div>
+                            <div class="item_represent">
+                                <i class="bi bi-cash"></i>
+                                <div class="description">
+                                    <span>MONEY BACK GUARANTEE</span>
+                                    <small>100% money back guarantee.</small>
+                                </div>
+                            </div>
+
+                            <div class="item_represent">
+                                <i class="bi bi-shield-lock"></i>
+                                <div class="description">
+                                    <span>SAFE &amp; SECURE</span>
+                                    <small>Lorem ipsum dolor sit amet</small>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Start Home Product -->
+        <section class="home-main-contant-style2 tab-style shop-product-tab home-work-pro-tab">
+            <div class="container">
+                <div class="main-title-wrapper clearfix">
+                    <div class="main-title">
+                        <ul class="nav nav-tabs style1" id="myTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="home-tab" data-bs-toggle="tab"
+                                        data-bs-target="#home" type="button" role="tab" aria-controls="home"
+                                        aria-selected="true">DESCRIPTION
+                                </button>
+                            </li>
+                            {#                            <li class="nav-item" role="presentation">#}
+                            {#                                <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile"#}
+                            {#                                        type="button" role="tab" aria-controls="profile" aria-selected="false">SIZING#}
+                            {#                                    GUIDE#}
+                            {#                                </button>#}
+                            {#                            </li>#}
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <h5 class="mb10">Product Full Description</h5>
+                        <p class="mb15">
+                            {{ product.body | safe }}
+                        </p>
+
+                    </div>
+                    {#                    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">#}
+                    {#                        <h5 class="mb10">Product Sizes</h5>#}
+                    {#                        <div class="table-responsive">#}
+                    {#                        </div>#}
+                    {#                    </div>#}
+                    {#                    <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">#}
+                    {#                        <h5>2 Review for "Lorem ipsum dolor sit amet"</h5>#}
+                    {##}
+                    {#                        <div class="comments">#}
+                    {#                            <div class="comment-image">#}
+                    {#                                <figure>#}
+                    {#                                    <img src="/static/img/shop/products/small1.jpg" alt="" class="img-fluid d-block">#}
+                    {#                                </figure>#}
+                    {#                            </div>#}
+                    {#                            <div class="comment-content">#}
+                    {#                                <div class="comment-content-head">#}
+                    {#                                    <h6 class="comment-title">Lorem ipsum dolor sit</h6>#}
+                    {#                                </div>#}
+                    {#                                <div class="review">#}
+                    {#                                    <ul class="list list-inline comment-meta">#}
+                    {#                                        <li>#}
+                    {#                                            <i class="fa fa-star color-theme"></i>#}
+                    {#                                            <i class="fa fa-star color-theme"></i>#}
+                    {#                                            <i class="fa fa-star color-theme"></i>#}
+                    {#                                            <i class="fa fa-star color-theme"></i>#}
+                    {#                                            <i class="fa fa-star-half-o color-theme"></i>#}
+                    {#                                        </li>#}
+                    {#                                    </ul>#}
+                    {#                                </div>#}
+                    {#                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae sequi ipsa fugit#}
+                    {#                                    officia eos! Sapiente laboriosam molestiae praesentium ducimus culpa. Magnam, odit,#}
+                    {#                                    optio.</p>#}
+                    {#                                <cite>Joe Doe</cite>#}
+                    {#                            </div>#}
+                    {#                        </div>#}
+                    {##}
+                    {#                        <div class="comments">#}
+                    {#                            <div class="comment-image">#}
+                    {#                                <figure>#}
+                    {#                                    <img src="/static/img/shop/products/small2.jpg" alt=""#}
+                    {#                                         class="img-fluid d-block">#}
+                    {#                                </figure>#}
+                    {#                            </div>#}
+                    {#                            <div class="comment-content">#}
+                    {#                                <div class="comment-content-head">#}
+                    {#                                    <h6 class="comment-title">Lorem ipsum dolor sit</h6>#}
+                    {#                                </div>#}
+                    {#                                <div class="review">#}
+                    {#                                    <ul class="list list-inline comment-meta">#}
+                    {#                                        <li>#}
+                    {#                                            <i class="fa fa-star color-theme"></i>#}
+                    {#                                            <i class="fa fa-star color-theme"></i>#}
+                    {#                                            <i class="fa fa-star color-theme"></i>#}
+                    {#                                            <i class="fa fa-star color-theme"></i>#}
+                    {#                                            <i class="fa fa-star-half-o color-theme"></i>#}
+                    {#                                        </li>#}
+                    {#                                    </ul>#}
+                    {#                                </div>#}
+                    {#                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae sequi ipsa fugit#}
+                    {#                                    officia eos! Sapiente laboriosam molestiae praesentium ducimus culpa. Magnam, odit,#}
+                    {#                                    optio.</p>#}
+                    {#                                <cite>Joe Doe</cite>#}
+                    {#                            </div>#}
+                    {#                        </div>#}
+                    {##}
+                    {#                    </div>#}
+                </div>
+            </div>
+        </section>
+        <!-- End Product -->
+
+
+        <!-- Start Home Product -->
+        <section class="home-main-contant-style2 lookbook-style">
+            <div class="container">
+                <div class="headline"><h3>Related Product</h3></div>
+                <div class="lookbook-product-style">
+                    <div class="related owl-carousel owl-theme owl-loaded owl-drag">
+
+
+                        <div class="owl-stage-outer">
+                            <div class="owl-stage"
+                                 style="transform: translate3d(0px, 0px, 0px); transition: all 0s ease 0s; width: 3950px;">
+                                <div class="owl-item active" style="width: 365px; margin-right: 30px;">
+                                    <div class="item">
+                                        <!-- Start Single Product -->
+                                        <div class="single-product mt30">
+                                            <div class="product-image">
+                                                <img src="/static/img/shop/products/product-31.jpg" alt=""
+                                                     class="img-fluid d-block">
+                                                <a href="product-details.html" class="custom-btn">
+                                                    <div class="btn-icon"><i class="bi bi-cart-check"></i> Add to Cart
+                                                    </div>
+                                                </a>
+                                            </div>
+                                            <div class="product-info">
+                                                <span class="category"><a href="shop-gridside.html">Sony</a></span>
+                                                <h4 class="title">
+                                                    <a href="product-details.html">Sony Camera</a>
+                                                </h4>
+
+                                                <ul class="list-inline product-review">
+                                                    <li><i class="rating-selected fa fa-star"></i></li>
+                                                    <li><i class="rating-selected fa fa-star"></i></li>
+                                                    <li><i class="rating fa fa-star"></i></li>
+                                                    <li><i class="rating fa fa-star"></i></li>
+                                                    <li><i class="rating fa fa-star"></i></li>
+                                                </ul>
+                                                <div class="price">
+                                                    <span>$199.00</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- End Single Product -->
+                                    </div>
+                                </div>
+                                <div class="owl-item" style="width: 365px; margin-right: 30px;">
+                                    <div class="item">
+                                        <!-- Start Single Product -->
+                                        <div class="single-product mt30">
+                                            <div class="product-image">
+                                                <img src="/static/img/shop/products/product-32.jpg" alt=""
+                                                     class="img-fluid d-block">
+                                                <span class="product-sale">-25%</span>
+                                                <a href="product-details.html" class="custom-btn">
+                                                    <div class="btn-icon"><i class="bi bi-cart-check"></i> Add to Cart
+                                                    </div>
+                                                </a>
+                                            </div>
+                                            <div class="product-info">
+                                                <span class="category"><a href="shop-gridside.html">HP</a></span>
+                                                <h4 class="title">
+                                                    <a href="product-details.html">HP Printer</a>
+                                                </h4>
+                                                <ul class="list-inline product-review">
+                                                    <li><i class="rating-selected fa fa-star"></i></li>
+                                                    <li><i class="rating-selected fa fa-star"></i></li>
+                                                    <li><i class="rating-selected fa fa-star"></i></li>
+                                                    <li><i class="rating fa fa-star"></i></li>
+                                                    <li><i class="rating fa fa-star"></i></li>
+                                                </ul>
+                                                <div class="price">
+                                                    <span>$275.00</span>
+                                                    <span class="discount-price">$300.00</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- End Single Product -->
+                                    </div>
+                                </div>
+                                <div class="owl-item" style="width: 365px; margin-right: 30px;">
+                                    <div class="item">
+                                        <!-- Start Single Product -->
+                                        <div class="single-product mt30">
+                                            <div class="product-image">
+                                                <img src="/static/img/shop/products/product-38.jpg" alt=""
+                                                     class="img-fluid d-block">
+                                                <a href="product-details.html" class="custom-btn">
+                                                    <div class="btn-icon"><i class="bi bi-cart-check"></i> Add to Cart
+                                                    </div>
+                                                </a>
+                                            </div>
+                                            <div class="product-info">
+                                                <span class="category"><a href="shop-gridside.html">DRONE</a></span>
+                                                <h4 class="title">
+                                                    <a href="product-details.html">HD Camera Drone</a>
+                                                </h4>
+                                                <ul class="list-inline product-review">
+                                                    <li><i class="rating-selected fa fa-star"></i></li>
+                                                    <li><i class="rating-selected fa fa-star"></i></li>
+                                                    <li><i class="rating-selected fa fa-star"></i></li>
+                                                    <li><i class="rating-selected fa fa-star"></i></li>
+                                                    <li><i class="rating-selected fa fa-star"></i></li>
+                                                </ul>
+                                                <div class="price">
+                                                    <span>$399.00</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- End Single Product -->
+                                    </div>
+                                </div>
+                                <div class="owl-item" style="width: 365px; margin-right: 30px;">
+                                    <div class="item">
+                                        <!-- Start Single Product -->
+                                        <div class="single-product mt30">
+                                            <div class="product-image">
+                                                <img src="/static/img/shop/products/product-41.jpg" alt=""
+                                                     class="img-fluid d-block">
+                                                <span class="new-tag">New</span>
+                                                <a href="product-details.html" class="custom-btn">
+                                                    <div class="btn-icon"><i class="bi bi-cart-check"></i> Add to Cart
+                                                    </div>
+                                                </a>
+                                            </div>
+                                            <div class="product-info">
+                                                <span class="category"><a href="shop-gridside.html">Game</a></span>
+                                                <h4 class="title">
+                                                    <a href="product-details.html">Wireless Controller</a>
+                                                </h4>
+                                                <ul class="list-inline product-review">
+                                                    <li><i class="rating-selected fa fa-star"></i></li>
+                                                    <li><i class="rating-selected fa fa-star"></i></li>
+                                                    <li><i class="rating-selected fa fa-star"></i></li>
+                                                    <li><i class="rating-selected fa fa-star"></i></li>
+                                                    <li><i class="rating-selected fa fa-star"></i></li>
+                                                </ul>
+                                                <div class="price">
+                                                    <span>$400.00</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- End Single Product -->
+                                    </div>
+                                </div>
+                                <div class="owl-item" style="width: 365px; margin-right: 30px;">
+                                    <div class="item">
+                                        <!-- Start Single Product -->
+                                        <div class="single-product mt30">
+                                            <div class="product-image">
+                                                <img src="/static/img/shop/products/product-24.jpg" alt=""
+                                                     class="img-fluid d-block">
+                                                <a href="product-details.html" class="custom-btn">
+                                                    <div class="btn-icon"><i class="bi bi-cart-check"></i> Add to Cart
+                                                    </div>
+                                                </a>
+                                            </div>
+                                            <div class="product-info">
+                                                <span class="category"><a href="shop-gridside.html">Watch</a></span>
+                                                <h4 class="title">
+                                                    <a href="product-details.html">Beats Headphones</a>
+                                                </h4>
+                                                <ul class="list-inline product-review">
+                                                    <li><i class="rating-selected fa fa-star"></i></li>
+                                                    <li><i class="rating-selected fa fa-star"></i></li>
+                                                    <li><i class="rating-selected fa fa-star"></i></li>
+                                                    <li><i class="rating fa fa-star"></i></li>
+                                                    <li><i class="rating fa fa-star"></i></li>
+                                                </ul>
+                                                <div class="price">
+                                                    <span>$350.00</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- End Single Product -->
+                                    </div>
+                                </div>
+                                <div class="owl-item" style="width: 365px; margin-right: 30px;">
+                                    <div class="item">
+                                        <!-- Start Single Product -->
+                                        <div class="single-product mt30">
+                                            <div class="product-image">
+                                                <img src="/static/img/shop/products/product-16.jpg" alt=""
+                                                     class="img-fluid d-block">
+                                                <a href="product-details.html" class="custom-btn">
+                                                    <div class="btn-icon"><i class="bi bi-cart-check"></i> Add to Cart
+                                                    </div>
+                                                </a>
+                                            </div>
+                                            <div class="product-info">
+                                                <span class="category"><a href="shop-gridside.html">Samsung</a></span>
+                                                <h4 class="title">
+                                                    <a href="product-details.html">Samsung Gear VR</a>
+                                                </h4>
+                                                <ul class="list-inline product-review">
+                                                    <li><i class="rating-selected fa fa-star"></i></li>
+                                                    <li><i class="rating-selected fa fa-star"></i></li>
+                                                    <li><i class="rating fa fa-star"></i></li>
+                                                    <li><i class="rating fa fa-star"></i></li>
+                                                    <li><i class="rating fa fa-star"></i></li>
+                                                </ul>
+                                                <div class="price">
+                                                    <span>$70.00</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- End Single Product -->
+                                    </div>
+                                </div>
+                                <div class="owl-item" style="width: 365px; margin-right: 30px;">
+                                    <div class="item">
+                                        <!-- Start Single Product -->
+                                        <div class="single-product mt30">
+                                            <div class="product-image">
+                                                <img src="/static/img/shop/products/product-28.jpg" alt=""
+                                                     class="img-fluid d-block">
+                                                <span class="product-sale">-50%</span>
+                                                <a href="product-details.html" class="custom-btn">
+                                                    <div class="btn-icon"><i class="bi bi-cart-check"></i> Add to Cart
+                                                    </div>
+                                                </a>
+                                            </div>
+                                            <div class="product-info">
+                                                <span class="category"><a
+                                                        href="shop-gridside.html">Headphones</a></span>
+                                                <h4 class="title">
+                                                    <a href="product-details.html">Wireless Headphones</a>
+                                                </h4>
+                                                <ul class="list-inline product-review">
+                                                    <li><i class="rating-selected fa fa-star"></i></li>
+                                                    <li><i class="rating-selected fa fa-star"></i></li>
+                                                    <li><i class="rating-selected fa fa-star"></i></li>
+                                                    <li><i class="rating-selected fa fa-star"></i></li>
+                                                    <li><i class="rating fa fa-star"></i></li>
+                                                </ul>
+                                                <div class="price">
+                                                    <span>$100.00</span>
+                                                    <span class="discount-price">$200.00</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- End Single Product -->
+                                    </div>
+                                </div>
+                                <div class="owl-item" style="width: 365px; margin-right: 30px;">
+                                    <div class="item">
+                                        <!-- Start Single Product -->
+                                        <div class="single-product mt30">
+                                            <div class="product-image">
+                                                <img src="/static/img/shop/products/product-27.jpg" alt=""
+                                                     class="img-fluid d-block">
+                                                <a href="product-details.html" class="custom-btn">
+                                                    <div class="btn-icon"><i class="bi bi-cart-check"></i> Add to Cart
+                                                    </div>
+                                                </a>
+                                            </div>
+                                            <div class="product-info">
+                                                <span class="category"><a href="shop-gridside.html">Apple</a></span>
+                                                <h4 class="title">
+                                                    <a href="product-details.html">iphone 6x plus</a>
+                                                </h4>
+                                                <ul class="list-inline product-review">
+                                                    <li><i class="rating-selected fa fa-star"></i></li>
+                                                    <li><i class="rating-selected fa fa-star"></i></li>
+                                                    <li><i class="rating-selected fa fa-star"></i></li>
+                                                    <li><i class="rating fa fa-star"></i></li>
+                                                    <li><i class="rating fa fa-star"></i></li>
+                                                </ul>
+                                                <div class="price">
+                                                    <span>$899.00</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- End Single Product -->
+                                    </div>
+                                </div>
+                                <div class="owl-item" style="width: 365px; margin-right: 30px;">
+                                    <div class="item">
+                                        <!-- Start Single Product -->
+                                        <div class="single-product mt30">
+                                            <div class="product-image">
+                                                <img src="/static/img/shop/products/product-36.jpg" alt=""
+                                                     class="img-fluid d-block">
+                                                <span class="product-sale">-50%</span>
+                                                <a href="product-details.html" class="custom-btn">
+                                                    <div class="btn-icon"><i class="bi bi-cart-check"></i> Add to Cart
+                                                    </div>
+                                                </a>
+                                            </div>
+                                            <div class="product-info">
+                                                <span class="category"><a href="shop-gridside.html">Sony</a></span>
+                                                <h4 class="title">
+                                                    <a href="product-details.html">Sony HD Camera</a>
+                                                </h4>
+                                                <ul class="list-inline product-review">
+                                                    <li><i class="rating-selected fa fa-star"></i></li>
+                                                    <li><i class="rating-selected fa fa-star"></i></li>
+                                                    <li><i class="rating-selected fa fa-star"></i></li>
+                                                    <li><i class="rating-selected fa fa-star"></i></li>
+                                                    <li><i class="rating-selected fa fa-star"></i></li>
+                                                </ul>
+                                                <div class="price">
+                                                    <span>$100.00</span>
+                                                    <span class="discount-price">$200.00</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- End Single Product -->
+                                    </div>
+                                </div>
+                                <div class="owl-item" style="width: 365px; margin-right: 30px;">
+                                    <div class="item">
+                                        <!-- Start Single Product -->
+                                        <div class="single-product mt30">
+                                            <div class="product-image">
+                                                <img src="/static//static/img/shop/products/product-02.jpg" alt=""
+                                                     class="img-fluid d-block">
+                                                <a href="product-details.html" class="custom-btn">
+                                                    <div class="btn-icon"><i class="bi bi-cart-check"></i> Add to Cart
+                                                    </div>
+                                                </a>
+                                            </div>
+                                            <div class="product-info">
+                                                <span class="category"><a href="shop-gridside.html">Apple</a></span>
+                                                <h4 class="title">
+                                                    <a href="product-details.html">Apple Watch Series 6</a>
+                                                </h4>
+                                                <ul class="list-inline product-review">
+                                                    <li><i class="rating-selected fa fa-star"></i></li>
+                                                    <li><i class="rating-selected fa fa-star"></i></li>
+                                                    <li><i class="rating-selected fa fa-star"></i></li>
+                                                    <li><i class="rating-selected fa fa-star"></i></li>
+                                                    <li><i class="rating-selected fa fa-star"></i></li>
+                                                </ul>
+                                                <div class="price">
+                                                    <span>$899.00</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- End Single Product -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="owl-nav">
+                            <button type="button" role="presentation" class="owl-prev disabled"><i
+                                    class="fa fa-chevron-left"></i></button>
+                            <button type="button" role="presentation" class="owl-next"><i
+                                    class="fa fa-chevron-right"></i></button>
+                        </div>
+                        <div class="owl-dots">
+                            <button role="button" class="owl-dot active"><span></span></button>
+                            <button role="button" class="owl-dot"><span></span></button>
+                            <button role="button" class="owl-dot"><span></span></button>
+                            <button role="button" class="owl-dot"><span></span></button>
+                            <button role="button" class="owl-dot"><span></span></button>
+                            <button role="button" class="owl-dot"><span></span></button>
+                            <button role="button" class="owl-dot"><span></span></button>
+                            <button role="button" class="owl-dot"><span></span></button>
+                            <button role="button" class="owl-dot"><span></span></button>
+                            <button role="button" class="owl-dot"><span></span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- End Product -->
+    </div>
+{% endblock %}

@@ -1,0 +1,201 @@
+{% extends 'shared/layout.html' %}
+{% load thumbnail %}
+{% load render_partial %}
+{% load ratings %}
+
+
+{% block title %}
+    shop
+{% endblock %}
+
+
+{% block content %}
+    <section class="page-heading-2">
+        <div class="container">
+            <div class="breadcrumb text-center text-white">
+                <h1 class="page-title">Shop</h1>
+                <a href="{% url 'home-page' %}">Home</a>
+                <span class="delimeter"> &gt; </span>
+                <span class="current">Shop</span>
+            </div>
+        </div>
+    </section>
+
+    <div class="main-contain categorie-page">
+        <div class="container">
+            <div class="row">
+                <div class="xxl-3 col-xl-3 col-lg-3 col-md-4 col-sm-12 col-xs">
+
+                    {% render_partial 'product.views.product_category_component' %}
+
+                    <aside>
+                        <div class="price-range-block mb30">
+                            <div class="headline-left"><h3>By Price</h3></div>
+                            <div class="price-range">
+                                <span id="amount">$0 - $400</span>
+                                <div id="slider-range"
+                                     class="ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all"
+                                     aria-disabled="false">
+                                    <div class="ui-slider-range ui-widget-header ui-corner-all"
+                                         style="left: 0%; width: 80%;"></div>
+                                    <a class="ui-slider-handle ui-state-default ui-corner-all" href="#"
+                                       style="left: 0%;"></a><a class="ui-slider-handle ui-state-default ui-corner-all"
+                                                                href="#" style="left: 80%;"></a></div>
+                            </div>
+                        </div>
+                    </aside>
+
+                    {% render_partial 'product.views.product_brand_component' %}
+
+                    <aside>
+                        <div class="sidebar-block mb30 overflow-h">
+                            <div class="headline-left"><h3>Top Rated Products</h3></div>
+                            {% for product in product_rating %}
+                                <div class="small-pro-list mb30">
+                                {% thumbnail product.image '80x80' crop='center' as im %}
+                                    <img src="{{ im.url }}" alt="" class="img-fluid d-block">
+                                {% endthumbnail %}
+                                <div class="product-description">
+                                    <h5 class="small-pro-title"><a
+                                            href="{{ product.get_absolute_url }}">{{ product.title | truncatewords:4 }}</a>
+                                    </h5>
+                                    <ul class="list-inline product-ratings">
+                                        <li>{% ratings product %}</li>
+                                    </ul>
+                                    <div class="price">
+                                        {% if product.discount %}
+                                            <span>${{ product.price }}.00</span>
+                                            <span class="discount-price">{{ product.result_total_price }}.00</span>
+                                        {% else %}
+                                            <span>${{ product.price }}.00</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <br>
+                            {% endfor %}
+
+                            </div>
+                        </div>
+                    </aside>
+
+                    <aside>
+                        <div class="sidebar-block overflow-h">
+                            <div class="headline-left"><h3>Products On Sale</h3></div>
+                            {% for product in product_sale %}
+                                <div class="small-pro-list mb30">
+                                {% thumbnail product.image '80x80' crop='center' as im %}
+                                    <img src="{{ im.url }}" alt="" class="img-fluid d-block">
+                                {% endthumbnail %}
+                                <div class="product-description">
+                                    <h5 class="small-pro-title"><a
+                                            href="{{ product.get_absolute_url }}">{{ product.title | truncatewords:4 }}</a>
+                                    </h5>
+                                    <ul class="list-inline product-ratings">
+                                        <li>{% ratings product %}</li>
+                                    </ul>
+                                    <div class="price">
+                                        {% if product.discount %}
+                                            <span>${{ product.price }}.00</span>
+                                            <span class="discount-price">{{ product.result_total_price }}.00</span>
+                                        {% else %}
+                                            <span>${{ product.price }}.00</span>
+                                        {% endif %}
+                                    </div>
+                                <br>
+                            {% endfor %}
+
+                            </div>
+                    </aside>
+
+
+                </div>
+
+                <div class="xxl-9 col-xl-9 col-lg-9 col-md-4 col-sm-12 col-xs">
+                    <div class="row">
+                        <div class="col-xs">
+                            <div class="product-filter-content advanced_search">
+                                {#                                <p>Showing Products 1-9 Result</p>#}
+                                <ul class="view-mode">
+                                    <li class="search_select">
+                                        <div class="nice-select s_select" tabindex="0">
+                                            <span class="current">Sorting items</span>
+                                            <select class="list select-sort">
+                                                <option data-value="1" class="option selected focus">Price: Lowest first
+                                                </option>
+                                                <option data-value="2" class="option">Price: Highest first</option>
+                                                <option data-value="4" class="option">Product Name: A to Z</option>
+                                                <option data-value="2" class="option">Product Name: Z to A</option>
+                                                <option data-value="4" class="option">In stock</option>
+                                                <option data-value="4" class="option">Reference: Lowest first</option>
+                                                <option data-value="4" class="option">Reference: Highest first</option>
+                                            </select>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        {% for product in object_list %}
+                            <div class="col-xxl-3 col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs">
+                                <!-- Start Single Product -->
+                                <div class="single-product mt30">
+                                    <div class="product-image">
+                                        {% thumbnail product.image '350x350' crop='center' as im %}
+                                            <img src="{{ im.url }}" class="img-fluid d-block">
+                                        {% endthumbnail %}
+                                        {% if product.discount %}
+                                            <span class="product-sale">-{{ product.discount }}%</span>
+                                        {% endif %}
+                                        <a href="{{ product.get_absolute_url }}" class="custom-btn">
+                                            <div class="btn-icon"><i class="bi bi-cart-check"></i> detail</div>
+                                        </a>
+                                    </div>
+                                    <div class="product-info">
+                                        <span class="category"><a
+                                                href="{% url 'brand_url_page' brand=product.brand.url_title %}">{{ product.brand }}</a></span>
+                                        <h4 class="title">
+                                            <a href="{{ product.get_absolute_url }}">{{ product.title }}</a>
+                                        </h4>
+                                        <ul class="list-inline product-review">
+                                            <li>{% ratings product %}</li>
+                                        </ul>
+                                        <div class="price">
+                                            {% if product.discount %}
+                                                <span>${{ product.price }}.00</span>
+                                                <span class="discount-price">${{ product.result_total_price }}.00</span>
+                                            {% else %}
+                                                <span>${{ product.price }}.00</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- End Single Product -->
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Start Pagination-->
+                    <div class="cd-pagination">
+                        <ul class="pagination">
+                            {% if page_obj.has_previous %}
+                                <li><a href="?page={{ page_obj.previous_page_number }}"><i class="fa fa-angle-left"
+                                                                                           aria-hidden="true"></i></a>
+                                </li>
+                            {% endif %}
+                            {% for pageNumber in paginator.page_range %}
+                                <li class="{% if page_obj.number == pageNumber %} active {% endif %}"><a
+                                        href="?page={{ pageNumber }}">{{ pageNumber }}</a></li>
+                            {% endfor %}
+
+                            {% if page_obj.has_next %}
+                                <li><a href="?page={{ page_obj.next_page_number }}"><i class="fa fa-angle-right"
+                                                                                       aria-hidden="true"></i></a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    <!-- End Pagination-->
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

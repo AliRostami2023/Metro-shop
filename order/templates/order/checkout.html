@@ -1,0 +1,128 @@
+{% extends 'shared/layout.html' %}
+
+
+{% block title %}
+    checkout
+{% endblock %}
+
+
+{% block content %}
+    <section class="page-heading-2">
+        <div class="container">
+            <div class="breadcrumb text-center text-white">
+                <h1 class="page-title">Checkout</h1>
+                <a href="{% url 'home-page' %}">Home</a>
+                <span class="delimeter"> &gt; </span>
+                <span class="current">Checkout</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="main-contain checkout-style">
+        <div class="container">
+            <div class="row">
+                <div class="xxl-8 col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs">
+                    <h4>Billing Address</h4>
+                    <form method="post">
+                        {% csrf_token %}
+                        <hr class="padding-bottom-1x mb30">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="checkout-fn">first name :</label>
+                                    {{ form.first_name }}
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="checkout-fn">last name :</label>
+                                    {{ form.last_name }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="checkout-fn">email (optional) :</label>
+                                    {{ form.email }}
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="checkout-fn">phone :</label>
+                                    {{ form.phone_number }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="checkout-fn">country :</label>
+                                    {{ form.country }}
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="checkout-fn">state :</label>
+                                    {{ form.state }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="checkout-fn">city :</label>
+                                    {{ form.city }}
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="checkout-fn">zip code :</label>
+                                    {{ form.zip_code }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row padding-bottom-1x">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="checkout-fn">address :</label>
+                                    {{ form.address }}
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="padding-bottom-1x">
+                        <div class="checkout-footer">
+                            <div class="column d-flex"><a href="{% url 'cart-detail' %}" class="custom-btn">Back To
+                                Cart</a></div>
+                        </div>
+                    </form>
+                </div>
+                <div class="xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs">
+                    <div class="cart-totals bg-grey pall">
+                        <h2>Cart totals</h2>
+                        <div class="cart-summary-line">
+                            <span class="summary-subtotal">{{ cart.cart_quantity }} items</span>
+                        </div>
+{#                        <div class="cart-summary-line">#}
+{#                            <span class="summary-subtotal">Shipping</span>#}
+{#                            <span class="summary-value">$7.00</span>#}
+{##}
+{#                        </div>#}
+                        <div class="cart-total clearfix">
+                            <span class="total-label">Total</span>
+                            <span class="total-value">${{ cart.total }}</span>
+                        </div>
+                        <div class="cart-total-btn d-flex">
+
+                            <a href="checkout.html" class="custom-btn">
+                                <div class="btn-icon">payment</div>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,250 @@
+{% extends 'shared/layout.html' %}
+{% load thumbnail %}
+{% load render_partial %}
+
+
+{% block title %}
+    shop
+{% endblock %}
+
+
+{% block content %}
+    <section class="page-heading-2">
+        <div class="container">
+            <div class="breadcrumb text-center text-white">
+                <h1 class="page-title">Shop</h1>
+                <a href="{% url 'home-page' %}">Home</a>
+                <span class="delimeter"> &gt; </span>
+                <span class="current">Shop</span>
+            </div>
+        </div>
+    </section>
+
+    <div class="main-contain categorie-page">
+        <div class="container">
+            <div class="row">
+                <div class="xxl-3 col-xl-3 col-lg-3 col-md-4 col-sm-12 col-xs">
+
+                    {% render_partial 'product.views.product_category_component' %}
+
+                    <aside>
+                        <div class="price-range-block mb30">
+                            <div class="headline-left"><h3>By Price</h3></div>
+                            <div class="price-range">
+                                <span id="amount">$0 - $400</span>
+                                <div id="slider-range"
+                                     class="ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all"
+                                     aria-disabled="false">
+                                    <div class="ui-slider-range ui-widget-header ui-corner-all"
+                                         style="left: 0%; width: 80%;"></div>
+                                    <a class="ui-slider-handle ui-state-default ui-corner-all" href="#"
+                                       style="left: 0%;"></a><a class="ui-slider-handle ui-state-default ui-corner-all"
+                                                                href="#" style="left: 80%;"></a></div>
+                            </div>
+                        </div>
+                    </aside>
+
+                    {% render_partial 'product.views.product_brand_component' %}
+
+                    <aside>
+                        <div class="sidebar-block mb30 overflow-h">
+                            <div class="headline-left"><h3>Top Rated Products</h3></div>
+                            <div class="small-pro-list mb30">
+                                <img src="/static/img/shop/products/product-02.jpg" alt="" class="img-fluid d-block">
+                                <div class="product-description">
+                                    <h5 class="small-pro-title"><a href="#">Wireless Headphones</a></h5>
+                                    <ul class="list-inline product-ratings">
+                                        <li><i class="rating-selected fa fa-star"></i></li>
+                                        <li><i class="rating-selected fa fa-star"></i></li>
+                                        <li><i class="rating-selected fa fa-star"></i></li>
+                                        <li><i class="rating fa fa-star"></i></li>
+                                        <li><i class="rating fa fa-star"></i></li>
+                                    </ul>
+                                    <div class="small-pro-price"><span>$70.00</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="small-pro-list mb30">
+                                <img src="/static/img/shop/products/product-36.jpg" alt="" class="img-fluid d-block">
+                                <div class="product-description">
+                                    <h5 class="small-pro-title"><a href="#">Samsung Gear VR</a></h5>
+                                    <ul class="list-inline product-ratings">
+                                        <li><i class="rating-selected fa fa-star"></i></li>
+                                        <li><i class="rating-selected fa fa-star"></i></li>
+                                        <li><i class="rating-selected fa fa-star"></i></li>
+                                        <li><i class="rating-selected fa fa-star"></i></li>
+                                        <li><i class="rating fa fa-star"></i></li>
+                                    </ul>
+                                    <div class="small-pro-price"><span>$100.00</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="small-pro-list">
+                                <img src="/static/img/shop/products/product-44.jpg" alt="" class="img-fluid d-block">
+                                <div class="product-description">
+                                    <h5 class="small-pro-title"><a href="#">Google Smart Speaker</a></h5>
+                                    <ul class="list-inline product-ratings">
+                                        <li><i class="rating-selected fa fa-star"></i></li>
+                                        <li><i class="rating-selected fa fa-star"></i></li>
+                                        <li><i class="rating-selected fa fa-star"></i></li>
+                                        <li><i class="rating-selected fa fa-star"></i></li>
+                                        <li><i class="rating-selected fa fa-star"></i></li>
+                                    </ul>
+                                    <div class="small-pro-price"><span>$299.00</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+
+
+                    <aside>
+                        <div class="sidebar-block overflow-h">
+                            <div class="headline-left"><h3>Products On Sale</h3></div>
+                            <div class="small-pro-list mb30">
+                                <img src="/static/img/shop/products/product-41.jpg" alt="" class="img-fluid d-block">
+                                <div class="product-description">
+                                    <h5 class="small-pro-title"><a href="#">Apple MacBook Air</a></h5>
+                                    <ul class="list-inline product-ratings">
+                                        <li><i class="rating-selected fa fa-star"></i></li>
+                                        <li><i class="rating-selected fa fa-star"></i></li>
+                                        <li><i class="rating-selected fa fa-star"></i></li>
+                                        <li><i class="rating-selected fa fa-star"></i></li>
+                                        <li><i class="rating-selected fa fa-star"></i></li>
+                                    </ul>
+                                    <div class="small-pro-price"><span>$399.00</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="small-pro-list mb30">
+                                <img src="/static/img/shop/products/product-24.jpg" alt="" class="img-fluid d-block">
+                                <div class="product-description">
+                                    <h5 class="small-pro-title"><a href="#">Apple iPad Pro</a></h5>
+                                    <ul class="list-inline product-ratings">
+                                        <li><i class="rating-selected fa fa-star"></i></li>
+                                        <li><i class="rating-selected fa fa-star"></i></li>
+                                        <li><i class="rating-selected fa fa-star"></i></li>
+                                        <li><i class="rating-selected fa fa-star"></i></li>
+                                        <li><i class="rating fa fa-star"></i></li>
+                                    </ul>
+                                    <div class="small-pro-price"><span>$288.00</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="small-pro-list">
+                                <img src="/static/img/shop/products/product-31.jpg" alt="" class="img-fluid d-block">
+                                <div class="product-description">
+                                    <h5 class="small-pro-title"><a href="#">Sony VAIO laptop i5</a></h5>
+                                    <ul class="list-inline product-ratings">
+                                        <li><i class="rating-selected fa fa-star"></i></li>
+                                        <li><i class="rating-selected fa fa-star"></i></li>
+                                        <li><i class="rating-selected fa fa-star"></i></li>
+                                        <li><i class="rating-selected fa fa-star"></i></li>
+                                        <li><i class="rating-selected fa fa-star"></i></li>
+                                    </ul>
+                                    <div class="small-pro-price"><span>$199.00</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+
+
+                </div>
+
+                <div class="xxl-9 col-xl-9 col-lg-9 col-md-4 col-sm-12 col-xs">
+                    <div class="row">
+                        <div class="col-xs">
+                            <div class="product-filter-content advanced_search">
+                                {#                                <p>Showing Products 1-9 Result</p>#}
+                                <ul class="view-mode">
+                                    <li class="search_select">
+                                        <div class="nice-select s_select" tabindex="0">
+                                            <span class="current">Sorting items</span>
+                                            <select class="list select-sort">
+                                                <option data-value="1" class="option selected focus">Price: Lowest first
+                                                </option>
+                                                <option data-value="2" class="option">Price: Highest first</option>
+                                                <option data-value="4" class="option">Product Name: A to Z</option>
+                                                <option data-value="2" class="option">Product Name: Z to A</option>
+                                                <option data-value="4" class="option">In stock</option>
+                                                <option data-value="4" class="option">Reference: Lowest first</option>
+                                                <option data-value="4" class="option">Reference: Highest first</option>
+                                            </select>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        {% for product in products %}
+                            <div class="col-xxl-3 col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs">
+                                <!-- Start Single Product -->
+                                <div class="single-product mt30">
+                                    <div class="product-image">
+                                        {% thumbnail product.image '350x350' crop='center' as im %}
+                                            <img src="{{ im.url }}" class="img-fluid d-block">
+                                        {% endthumbnail %}
+                                        {% if product.discount %}
+                                            <span class="product-sale">-{{ product.discount }}%</span>
+                                        {% endif %}
+                                        <a href="product-details.html" class="custom-btn">
+                                            <div class="btn-icon"><i class="bi bi-cart-check"></i> Add to Cart</div>
+                                        </a>
+                                    </div>
+                                    <div class="product-info">
+                                        <span class="category"><a
+                                                href="shop-gridside.html">{{ product.brand }}</a></span>
+                                        <h4 class="title">
+                                            <a href="{{ product.get_absolute_url }}">{{ product.title }}</a>
+                                        </h4>
+                                        <ul class="list-inline product-review">
+                                            <li><i class="rating-selected fa fa-star"></i></li>
+                                            <li><i class="rating-selected fa fa-star"></i></li>
+                                            <li><i class="rating-selected fa fa-star"></i></li>
+                                            <li><i class="rating fa fa-star"></i></li>
+                                            <li><i class="rating fa fa-star"></i></li>
+                                        </ul>
+                                        <div class="price">
+                                            {% if product.discount %}
+                                                <span>${{ product.price }}.00</span>
+                                                <span class="discount-price">${{ product.total_price }}.00</span>
+                                            {% else %}
+                                                <span>${{ product.price }}.00</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- End Single Product -->
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Start Pagination-->
+                    <div class="cd-pagination">
+                        <ul class="pagination">
+                            {% if products.has_previous %}
+                                <li><a href="?page={{ products.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"><i class="fa fa-angle-left"
+                                                                                           aria-hidden="true"></i></a>
+                                </li>
+                            {% endif %}
+                            {% for pageNumber in products.paginator.page_range %}
+                                <li class="{% if products.number == pageNumber %} active {% endif %}"><a
+                                        href="?page={{ pageNumber }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ pageNumber }}</a></li>
+                            {% endfor %}
+
+                            {% if products.has_next %}
+                                <li><a href="?page={{ products.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"><i class="fa fa-angle-right"
+                                                                                       aria-hidden="true"></i></a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    <!-- End Pagination-->
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

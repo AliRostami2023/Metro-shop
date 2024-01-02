@@ -1,0 +1,277 @@
+<!-- Start Header Area -->
+<header class="header navbar-area">
+    <!-- Start Topbar -->
+    <div class="topbar">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 col-md-6 col-12">
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-12">
+                    <div class="topbar-right d-flex ml-auto">
+                        <div class="my-account">
+                            <ul class="user-login">
+                                {% if not request.user.is_authenticated %}
+                                    <li>
+                                        <a href="{% url 'login-page' %}">Sign In</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'register-page' %}">Register</a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                        <div class="top-social-links">
+                            <ul class="top-social-icons list-inline">
+                                <li>
+                                    <a href="{{ settings.facebook }}">
+                                        <i class="fab fa-facebook-f"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ settings.linkedin }}">
+                                        <i class="fab fa-linkedin"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ settings.pinterest }}">
+                                        <i class="fab fa-pinterest"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ settings.twitterX }}">
+                                        <i class="fab fa-twitter"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Topbar -->
+
+    <!-- Start Header Middle -->
+    <div class="header-middle">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-2 col-md-4 col-sm-4 col-xs">
+
+                    <!-- Start Header Logo -->
+                    <a class="navbar-brand" href="index-2.html">
+                        <img src="/static/img/logo.png" alt="Logo">
+                    </a>
+                    <!-- End Header Logo -->
+
+                </div>
+                <div class="col-lg-8 col-md-4 col-sm-4 col-xs">
+                    <!-- search start -->
+                    <form action="{% url 'search-product' %}">
+                        <div class="search-block">
+                            <div class="navbar-search">
+                                <div class="search-input">
+                                    <input type="search" name="q" placeholder="Search product">
+                                    {#                                    <i class="bi bi-search"></i>#}
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <!--search End -->
+
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-4 col-xs">
+                    <!-- Cart -->
+                    <div class="navbar-cart">
+                        <div class="wishlist">
+                            <a href="javascript:void(0)">
+                                <i class="bi bi-people"></i>
+                                <span class="total-items">0</span>
+                            </a>
+                        </div>
+                        <div class="cart-items">
+                            <a href="javascript:void(0)" class="cart-icon">
+                                <i class="bi bi-cart-check"></i>
+                                <span class="total-items">{{ cart.cart_quantity }}</span>
+                            </a>
+
+                            <div class="shopping-item">
+                                <div class="dropdown-cart-header">
+                                    <span>{{ cart.cart_quantity }} Items</span>
+                                </div>
+                                <ul class="shopping-list">
+                                    {% for item in cart %}
+                                        <li>
+                                            <a href="{% url 'delete-item-cart' item.unique_id %}" class="remove"
+                                               title="Remove this item"><i
+                                                    class="far fa-trash-alt"></i></a>
+                                            <div class="cart-img-block">
+                                                <a class="cart-img" href="{{ item.product.get_absolute_url }}"><img
+                                                        src="{{ item.product.image.url }}" alt=""></a>
+                                            </div>
+
+                                            <div class="content">
+                                                <h4>
+                                                    <a href="{{ item.product.get_absolute_url }}">{{ item.product.title }}</a>
+                                                </h4>
+                                                <p class="quantity">{{ item.quantity }}x - <span
+                                                        class="amount">${{ item.product.result_total_price }}</span></p>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+
+                                </ul>
+                                <div class="bottom">
+                                    <div class="total">
+                                        <span>Total</span>
+                                        <span class="total-amount">${{ cart.total }}</span>
+                                    </div>
+                                    <div class="mt30">
+                                        <a class="custom-btn" href="{% url 'checkout-cart' %}">Checkout</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- End Cart -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Header Middle -->
+
+
+    <!-- Start Main Menu Search -->
+    <div class="menu-block sticky-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-2 col-md-6 col-sm-6 col-xs-6">
+                    <!-- Start Mega Category Menu -->
+                    <div class="category-menu">
+                        <span class="cat-button"><i class="bi bi-list"></i>Categories</span>
+                        {% for category in categories %}
+                            {% if not category.parent %}
+                                {% if category.category_parent.all %}
+                                    <ul class="sub-category">
+                                        <li><a href="{% url 'category_url_page' cat=category.url_title %}">{{ category.title }} <i class="bi bi-chevron-right"></i></a>
+                                            {% for sub in category.category_parent.all %}
+                                                <ul class="inner-sub-category">
+                                                    <li><a href="{% url 'category_url_page' cat=sub.url_title %}">{{ sub.title }}</a></li>
+                                                </ul>
+                                            {% endfor %}
+                                        </li>
+                                        {% for category in categories %}
+                                            {% if not category.parent %}
+                                                {% if not category.category_parent.all %}
+                                                    <li><a href="{% url 'category_url_page'  cat=category.url_title %}">{{ category.title }}</a></li>
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <!-- End Mega Category Menu -->
+
+                </div>
+                <div class="col-lg-8 col-md-6 col-sm-6 col-xs-6">
+                    <div class="main-manu-block">
+                        <div class="cd-header-block">
+                            <nav id="navigation" class="navigation">
+                                <div class="nav-toggle"></div>
+                                <!-- Main Menus Wrapper -->
+                                <div class="nav-menus-wrapper">
+                                    <ul class="nav-menu nav-menu-centered text-center">
+                                        <li><a href="{% url 'home-page' %}">Home</a></li>
+
+                                        <li><a href="#">Electronics</a>
+                                            <div class="megamenu-panel">
+                                                <div class="megamenu-lists">
+                                                    <ul class="megamenu-list list-col-4">
+                                                        <li><a href="#">Digital Cameras</a></li>
+                                                        <li><a href="#">Camera Drones</a></li>
+                                                        <li><a href="#">Smart Watches</a></li>
+                                                        <li><a href="#">Headphones</a></li>
+                                                        <li><a href="#">Speaker</a></li>
+                                                        <li><a href="#">Watch</a></li>
+                                                    </ul>
+                                                    <ul class="megamenu-list list-col-4">
+                                                        <li><a href="#">HP Pavilion</a></li>
+                                                        <li><a href="#">Televisions</a></li>
+                                                        <li><a href="#">Phones</a></li>
+                                                        <li><a href="#">Laptop</a></li>
+                                                        <li><a href="#">Watch</a></li>
+                                                        <li><a href="#">Headphones</a></li>
+
+                                                    </ul>
+                                                    <ul class="megamenu-list list-col-4">
+                                                        <li><a href="#">Watch</a></li>
+                                                        <li><a href="#">Headphones</a></li>
+                                                        <li><a href="#">Samsung</a></li>
+                                                        <li><a href="#">Speaker</a></li>
+                                                        <li><a href="#">Computers & Tablets </a></li>
+                                                        <li><a href="#">Video Games </a></li>
+                                                    </ul>
+                                                    <ul class="megamenu-list list-col-4">
+                                                        <li><a href="#">Samsung</a></li>
+                                                        <li><a href="#">Speaker</a></li>
+                                                        <li><a href="#">Digital Cameras</a></li>
+                                                        <li><a href="#">Camera Drones</a></li>
+                                                        <li><a href="#">Smart Watches</a></li>
+                                                        <li><a href="#">Headphones</a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </li>
+
+
+{#                                        <li><a href="#">Pages</a>#}
+{#                                            <ul class="nav-dropdown">#}
+{#                                                <li><a href="cart.html">Cart</a></li>#}
+{#                                                <li><a href="checkout.html">Checkout</a></li>#}
+{#                                                <li><a href="login.html">Login</a></li>#}
+{#                                                <li><a href="register.html">Register</a></li>#}
+{##}
+{#                                            </ul>#}
+{#                                        </li>#}
+{#                                        <li><a href="#">Shop</a>#}
+{#                                            <ul class="nav-dropdown">#}
+{#                                                <li><a href="shop-grid-4-col.html">Shop Grid 4 Col</a></li>#}
+{#                                                <li><a href="shop-grid-5-col.html">Shop Grid 5 Col</a></li>#}
+{#                                                <li><a href="shop-grid-6-col.html">Shop Grid 6 Col</a></li>#}
+{#                                                <li><a href="shop-list.html">Shop List Sidebar</a></li>#}
+{#                                                <li><a href="shop-gridside.html">Shop Grid Sidebar</a></li>#}
+{#                                                <li><a href="product-details.html">Product Details</a></li>#}
+{##}
+{#                                            </ul>#}
+{#                                        </li>#}
+                                        <li><a href="{% url 'blog-list' %}">Blog</a></li>
+                                        <li><a href="{% url 'contact-us-page' %}">Contact</a></li>
+
+                                    </ul>
+
+                                </div>
+                            </nav>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="nav-hotline">
+                        <img src="/static/img/phone.png" alt=""/>
+                        <h3>Customer Support
+                            <span>{{ settings.number_customer_support }}</span>
+                        </h3>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Main Menu Search -->
+
+</header>
+<!-- End Header Area -->
+

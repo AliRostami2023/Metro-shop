@@ -1,0 +1,51 @@
+{% extends 'shared/layout.html' %}
+{% load render_partial %}
+{% load thumbnail %}
+
+
+{% block title %}
+    detail
+{% endblock %}
+
+
+{% block content %}
+    <div>
+        {% render_partial 'panel.views.sidebar_profile_component' %}
+    </div>
+    <div>
+
+        <div class="bd-example-snippet bd-code-snippet">
+            <div class="bd-example m-0 border-0">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col">image</th>
+                        <th scope="col">product name</th>
+                        <th scope="col">price</th>
+                        <th scope="col">color</th>
+                        <th scope="col">size</th>
+                        <th scope="col">quantity</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for detail in order.order_items.all %}
+                    	<tr>
+                        <th scope="row">{% thumbnail detail.product.image '50x50' crop='center' as im %}</th>
+                            <img src="{{ im.url }}" alt="">
+                            {% endthumbnail %}
+                        <td>{{ detail.product.title | truncatewords:5 }}</td>
+                        <td>{{ detail.price }}</td>
+                        <td>{{ detail.color }}</td>
+                        <td>{{ detail.size }}</td>
+                        <td>{{ detail.quantity }}</td>
+                    </tr>
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+
