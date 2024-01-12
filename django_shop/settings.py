@@ -157,7 +157,7 @@ STAR_RATINGS_STAR_WIDTH = 12
 STAR_RATINGS_RERATE = False
 STAR_RATINGS_ANONYMOUS = False
 
-<<<<<<< HEAD
+
 REST_FRAMEWORK = {
     'DEFAULT_THROTTLE_CLASSES': [
         'rest_framework.throttling.AnonRateThrottle',
@@ -188,11 +188,8 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=5)
 }
-=======
+
 # SET TIME SESSION
 
 SESSION_COOKIE_AGE = 1555200
 SESSION_SAVE_EVERY_REQUEST = True
-
-
->>>>>>> 9333080282adbc4fbc8768b50838271d74b54222
