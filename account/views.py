@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import login, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpRequest, Http404
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -13,6 +14,12 @@ from account.models import User
 
 
 class RegisterView(View):
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect(reverse('login-page'))
+        return super(RegisterView, self).dispatch(*args, **kwargs)
+
     def get(self, request: HttpRequest):
         form = RegisterForm()
         return render(request, 'account/register.html', {'form': form})
@@ -57,6 +64,12 @@ class ActivateAccount(View):
 
 
 class LoginView(View):
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect(reverse('login-page'))
+        return super(LoginView, self).dispatch(*args, **kwargs)
+
     def get(self, request: HttpRequest):
         form = LoginForm()
         return render(request, 'account/login.html', {'form': form})
@@ -129,7 +142,8 @@ class ResetPasswordView(View):
         return render(request, 'account/reset-password.html', {'form': form})
 
 
-class LogoutView(View):
+class LogoutView(LoginRequiredMixin, View):
     def get(self, request):
         logout(request)
         return redirect(reverse('home-page'))
+
