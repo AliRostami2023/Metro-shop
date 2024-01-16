@@ -18,6 +18,8 @@ class IndexView(TemplateView):
         context['sliders'] = Slider.objects.filter(published=True).all()
         context['banners'] = BannerSite.objects.filter(published=True).all()[:3]
         context['products'] = Product.objects.filter(published=True).order_by('-created')[:10]
+        context['product_discount'] = Product.objects.filter(published=True, discount__isnull=False).order_by(
+            '-discount')[:10]
         context['product_more_rating'] = Product.objects.filter(published=True, rating__isnull=False).order_by(
             'rating__average')[:7]
         return context
