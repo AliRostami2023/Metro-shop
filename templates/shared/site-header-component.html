@@ -150,28 +150,31 @@
                     <!-- Start Mega Category Menu -->
                     <div class="category-menu">
                         <span class="cat-button"><i class="bi bi-list"></i>Categories</span>
-                        {% for category in categories %}
-                            {% if not category.parent %}
-                                {% if category.category_parent.all %}
-                                    <ul class="sub-category">
-                                        <li><a href="{% url 'category_url_page' cat=category.url_title %}">{{ category.title }} <i class="bi bi-chevron-right"></i></a>
-                                            {% for sub in category.category_parent.all %}
-                                                <ul class="inner-sub-category">
-                                                    <li><a href="{% url 'category_url_page' cat=sub.url_title %}">{{ sub.title }}</a></li>
-                                                </ul>
-                                            {% endfor %}
-                                        </li>
-                                        {% for category in categories %}
-                                            {% if not category.parent %}
-                                                {% if not category.category_parent.all %}
-                                                    <li><a href="{% url 'category_url_page'  cat=category.url_title %}">{{ category.title }}</a></li>
-                                                {% endif %}
-                                            {% endif %}
-                                        {% endfor %}
-                                    </ul>
-                                {% endif %}
-                            {% endif %}
-                        {% endfor %}
+                        <ul class="sub-category">
+                            <li><a href="#">Apple <i class="bi bi-chevron-right"></i></a>
+                                <ul class="inner-sub-category">
+                                    <li><a href="#">Digital Cameras</a></li>
+                                    <li><a href="#">Camera Drones</a></li>
+                                    <li><a href="#">Smart Watches</a></li>
+                                    <li><a href="#">Headphones</a></li>
+                                    <li><a href="#">Speaker</a></li>
+                                    <li><a href="#">Watch</a></li>
+                                    <li><a href="#">Laptop</a></li>
+                                    <li><a href="#">Televisions</a></li>
+                                    <li><a href="#">Samsung Gear VR</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="#">HP Pavilion</a></li>
+                            <li><a href="#">Televisions</a></li>
+                            <li><a href="#">Phones</a></li>
+                            <li><a href="#">Laptop</a></li>
+                            <li><a href="#">Watch</a></li>
+                            <li><a href="#">Headphones</a></li>
+                            <li><a href="#">Samsung</a></li>
+                            <li><a href="#">Speaker</a></li>
+                            <li><a href="#">Computers &amp; Tablets </a></li>
+                            <li><a href="#">Video Games </a></li>
+                        </ul>
                     </div>
                     <!-- End Mega Category Menu -->
 
@@ -186,67 +189,46 @@
                                     <ul class="nav-menu nav-menu-centered text-center">
                                         <li><a href="{% url 'home-page' %}">Home</a></li>
 
-                                        <li><a href="#">Electronics</a>
+                                        <li><a href="#">Category</a>
                                             <div class="megamenu-panel">
                                                 <div class="megamenu-lists">
-                                                    <ul class="megamenu-list list-col-4">
-                                                        <li><a href="#">Digital Cameras</a></li>
-                                                        <li><a href="#">Camera Drones</a></li>
-                                                        <li><a href="#">Smart Watches</a></li>
-                                                        <li><a href="#">Headphones</a></li>
-                                                        <li><a href="#">Speaker</a></li>
-                                                        <li><a href="#">Watch</a></li>
-                                                    </ul>
-                                                    <ul class="megamenu-list list-col-4">
-                                                        <li><a href="#">HP Pavilion</a></li>
-                                                        <li><a href="#">Televisions</a></li>
-                                                        <li><a href="#">Phones</a></li>
-                                                        <li><a href="#">Laptop</a></li>
-                                                        <li><a href="#">Watch</a></li>
-                                                        <li><a href="#">Headphones</a></li>
-
-                                                    </ul>
-                                                    <ul class="megamenu-list list-col-4">
-                                                        <li><a href="#">Watch</a></li>
-                                                        <li><a href="#">Headphones</a></li>
-                                                        <li><a href="#">Samsung</a></li>
-                                                        <li><a href="#">Speaker</a></li>
-                                                        <li><a href="#">Computers & Tablets </a></li>
-                                                        <li><a href="#">Video Games </a></li>
-                                                    </ul>
-                                                    <ul class="megamenu-list list-col-4">
-                                                        <li><a href="#">Samsung</a></li>
-                                                        <li><a href="#">Speaker</a></li>
-                                                        <li><a href="#">Digital Cameras</a></li>
-                                                        <li><a href="#">Camera Drones</a></li>
-                                                        <li><a href="#">Smart Watches</a></li>
-                                                        <li><a href="#">Headphones</a></li>
-                                                    </ul>
+                                                    {% for category in categories %}
+                                                        <ul class="megamenu-list list-col-4">
+                                                            {% if category.parent %}
+                                                                <li style="font-weight: bold"><a
+                                                                        href="#">{{ group.parent.title }}</a></li>
+                                                                <li><a href="#">{{ category.title }}</a></li>
+                                                            {% else %}
+                                                                <li><a href="#">{{ category.title }}</a></li>
+                                                            {% endif %}
+                                                        </ul>
+                                                    {% endfor %}
                                                 </div>
+
                                             </div>
                                         </li>
 
 
-{#                                        <li><a href="#">Pages</a>#}
-{#                                            <ul class="nav-dropdown">#}
-{#                                                <li><a href="cart.html">Cart</a></li>#}
-{#                                                <li><a href="checkout.html">Checkout</a></li>#}
-{#                                                <li><a href="login.html">Login</a></li>#}
-{#                                                <li><a href="register.html">Register</a></li>#}
-{##}
-{#                                            </ul>#}
-{#                                        </li>#}
-{#                                        <li><a href="#">Shop</a>#}
-{#                                            <ul class="nav-dropdown">#}
-{#                                                <li><a href="shop-grid-4-col.html">Shop Grid 4 Col</a></li>#}
-{#                                                <li><a href="shop-grid-5-col.html">Shop Grid 5 Col</a></li>#}
-{#                                                <li><a href="shop-grid-6-col.html">Shop Grid 6 Col</a></li>#}
-{#                                                <li><a href="shop-list.html">Shop List Sidebar</a></li>#}
-{#                                                <li><a href="shop-gridside.html">Shop Grid Sidebar</a></li>#}
-{#                                                <li><a href="product-details.html">Product Details</a></li>#}
-{##}
-{#                                            </ul>#}
-{#                                        </li>#}
+                                        {#                                        <li><a href="#">Pages</a>#}
+                                        {#                                            <ul class="nav-dropdown">#}
+                                        {#                                                <li><a href="cart.html">Cart</a></li>#}
+                                        {#                                                <li><a href="checkout.html">Checkout</a></li>#}
+                                        {#                                                <li><a href="login.html">Login</a></li>#}
+                                        {#                                                <li><a href="register.html">Register</a></li>#}
+                                        {##}
+                                        {#                                            </ul>#}
+                                        {#                                        </li>#}
+                                        {#                                        <li><a href="#">Shop</a>#}
+                                        {#                                            <ul class="nav-dropdown">#}
+                                        {#                                                <li><a href="shop-grid-4-col.html">Shop Grid 4 Col</a></li>#}
+                                        {#                                                <li><a href="shop-grid-5-col.html">Shop Grid 5 Col</a></li>#}
+                                        {#                                                <li><a href="shop-grid-6-col.html">Shop Grid 6 Col</a></li>#}
+                                        {#                                                <li><a href="shop-list.html">Shop List Sidebar</a></li>#}
+                                        {#                                                <li><a href="shop-gridside.html">Shop Grid Sidebar</a></li>#}
+                                        {#                                                <li><a href="product-details.html">Product Details</a></li>#}
+                                        {##}
+                                        {#                                            </ul>#}
+                                        {#                                        </li>#}
                                         <li><a href="{% url 'blog-list' %}">Blog</a></li>
                                         <li><a href="{% url 'contact-us-page' %}">Contact</a></li>
 
