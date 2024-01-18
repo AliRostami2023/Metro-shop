@@ -1,10 +1,11 @@
 from django.core.paginator import Paginator
+from django.utils.crypto import get_random_string
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from account.models import User
 from api.serializers import UserListSerializers, UserCreatSerializers, ProductListSerializers, BlogListSerializers, \
-    OrderListSerializers, OrderItemSerializers
+    OrderListSerializers, OrderItemSerializers, ProductCreateSerializers
 from rest_framework import generics
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from blog.models import Article
@@ -35,7 +36,7 @@ class UserCreateApiView(APIView):
             new_user.username = ser_data.validated_data.get('username')
             new_user.email = ser_data.validated_data.get('email')
             new_user.set_password(ser_data.validated_data.get('password'))
-            new_user.is_active = True
+            new_user.email_active_code = get_random_string(72)
             new_user.save()
             return Response(ser_data.data, status.HTTP_201_CREATED)
         return Response(ser_data.errors, status.HTTP_400_BAD_REQUEST)
@@ -47,48 +48,48 @@ class ProductListApiView(generics.ListAPIView):
 
 
 class ProductCreateApiView(generics.CreateAPIView):
-    permission_classes = [IsAuthenticated, IsAdminUser]
+    permission_classes = [IsAuthenticated]
     queryset = Product.objects.all()
-    serializer_class = ProductListSerializers
+    serializer_class = ProductCreateSerializers
 
 
 class ProductUpdateApiView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsAuthenticated, IsAdminUser]
     queryset = Product.objects.all()
     serializer_class = ProductListSerializers
 
 
 class BlogListApiView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = Article.objects.all()
     serializer_class = BlogListSerializers
 
 
 class BlogCreateApiView(generics.CreateAPIView):
-    permission_classes = [IsAuthenticated, IsAdminUser]
+    permission_classes = [IsAuthenticated]
     queryset = Article.objects.all()
     serializer_class = BlogListSerializers
 
 
 class BlogUpdateApiView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsAuthenticated, IsAdminUser]
+    permission_classes = [IsAuthenticated]
     queryset = Article.objects.all()
     serializer_class = BlogListSerializers
 
 
 class OrderListApiView(generics.ListAPIView):
-    permission_classes = [IsAuthenticated, IsAdminUser]
+    permission_classes = [IsAuthenticated]
     queryset = Order.objects.all()
     serializer_class = OrderListSerializers
 
 
 class OrderCreateApiView(generics.CreateAPIView):
-    permission_classes = [IsAuthenticated, IsAdminUser]
+    permission_classes = [IsAuthenticated]
     queryset = Order.objects.all()
     serializer_class = OrderListSerializers
 
 
 class OrderUpdateApiView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsAuthenticated, IsAdminUser]
+    permission_classes = [IsAuthenticated]
     queryset = Order.objects.all()
     serializer_class = OrderListSerializers
 

@@ -1,5 +1,4 @@
 from rest_framework import serializers
-
 from account.models import User
 from blog.models import Article
 from order.models import Order, OrderItem
@@ -50,7 +49,14 @@ class ProductListSerializers(serializers.ModelSerializer):
     brand = serializers.StringRelatedField()
     color = serializers.StringRelatedField(many=True)
     size = serializers.StringRelatedField(many=True)
+    rating = serializers.StringRelatedField(many=True)
 
+    class Meta:
+        model = Product
+        fields = '__all__'
+
+
+class ProductCreateSerializers(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = '__all__'
@@ -80,4 +86,5 @@ class OrderItemSerializers(serializers.ModelSerializer):
     class Meta:
         model = OrderItem
         fields = '__all__'
+
 
