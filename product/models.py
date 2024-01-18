@@ -6,6 +6,8 @@ from ckeditor.fields import RichTextField
 from star_ratings.models import Rating
 from django.contrib.contenttypes.fields import GenericRelation
 
+from account.models import User
+
 
 # Create your models here.
 
@@ -157,3 +159,19 @@ class BannerSite(models.Model):
     class Meta:
         verbose_name = 'banner'
         verbose_name_plural = 'banners'
+
+
+class CommentProduct(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_comment')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_comment_product')
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies')
+    body = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.product} - {self.user} - {self.body[:20]}"
+
+    class Meta:
+        verbose_name_plural = 'comments'
+        ordering = ['-created']
+

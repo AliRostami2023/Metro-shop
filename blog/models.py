@@ -31,7 +31,7 @@ class Article(models.Model):
     title = models.CharField(max_length=500)
     slug = models.SlugField(max_length=550, blank=True, unique=True, allow_unicode=True)
     image = models.ImageField(upload_to='uploads/blog_image')
-    date = models.DateField(auto_now_add=True)
+    date = models.DateTimeField(auto_now_add=True)
     update = models.DateTimeField(auto_now=True)
     body = RichTextField()
     published = models.BooleanField(default=True)
@@ -49,4 +49,19 @@ class Article(models.Model):
         verbose_name = 'article'
         verbose_name_plural = 'articles'
         ordering = ['-date']
+
+
+class Comment(models.Model):
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='article_comment')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_comment')
+    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='reply')
+    body = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user} - {self.body[:20]} "
+
+    class Meta:
+        verbose_name_plural = 'comments'
+
 

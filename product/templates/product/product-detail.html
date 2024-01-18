@@ -92,7 +92,9 @@
                         </ul>
 
                         <ul class="product-meta mb15">
-                            <li>Manufacturer : <a href="{% url 'brand_url_page' brand=product.brand.url_title %}">{{ product.brand }}</a></li>
+                            <li>Manufacturer : <a
+                                    href="{% url 'brand_url_page' brand=product.brand.url_title %}">{{ product.brand }}</a>
+                            </li>
                             <li class="product-meta-availability">Availability :
                                 {% if product.availability %}
                                     <span class="text-success">In Stock </span> {{ product.availability }} items(s)
@@ -107,7 +109,7 @@
                             {{ product.short_body | safe }}
                         </p>
                         <form method="post" action="{% url 'add-product-cart' pk=product.id %}">
-                        {% csrf_token %}
+                            {% csrf_token %}
                             <div class="product-filter-content advanced_search mb30">
                                 <ul class="view-mode">
                                     <h3 class="shop-product-title">Size</h3>
@@ -116,7 +118,8 @@
                                             <span class="current">Choose Your Size</span>
                                             <select name="size" class="list">
                                                 {% for size in product.size.all %}
-                                                    <option name="size" value="{{ size.name }}" class="option">{{ size.name }}</option>
+                                                    <option name="size" value="{{ size.name }}"
+                                                            class="option">{{ size.name }}</option>
                                                 {% endfor %}
 
                                             </select>
@@ -134,7 +137,8 @@
                                             <span class="current">Choose Your color</span>
                                             <select name="color" class="list">
                                                 {% for color in product.color.all %}
-                                                    <option name="color" value="{{ color.name }}" class="option">{{ color.name }}</option>
+                                                    <option name="color" value="{{ color.name }}"
+                                                            class="option">{{ color.name }}</option>
                                                 {% endfor %}
 
                                             </select>
@@ -208,12 +212,11 @@
                                         aria-selected="true">DESCRIPTION
                                 </button>
                             </li>
-                            {#                            <li class="nav-item" role="presentation">#}
-                            {#                                <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile"#}
-                            {#                                        type="button" role="tab" aria-controls="profile" aria-selected="false">SIZING#}
-                            {#                                    GUIDE#}
-                            {#                                </button>#}
-                            {#                            </li>#}
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact"
+                                        type="button" role="tab" aria-controls="contact" aria-selected="false">Comments
+                                </button>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -226,77 +229,62 @@
                         </p>
 
                     </div>
-                    {#                    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">#}
-                    {#                        <h5 class="mb10">Product Sizes</h5>#}
-                    {#                        <div class="table-responsive">#}
-                    {#                        </div>#}
-                    {#                    </div>#}
-                    {#                    <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">#}
-                    {#                        <h5>2 Review for "Lorem ipsum dolor sit amet"</h5>#}
-                    {##}
-                    {#                        <div class="comments">#}
-                    {#                            <div class="comment-image">#}
-                    {#                                <figure>#}
-                    {#                                    <img src="/static/img/shop/products/small1.jpg" alt="" class="img-fluid d-block">#}
-                    {#                                </figure>#}
-                    {#                            </div>#}
-                    {#                            <div class="comment-content">#}
-                    {#                                <div class="comment-content-head">#}
-                    {#                                    <h6 class="comment-title">Lorem ipsum dolor sit</h6>#}
-                    {#                                </div>#}
-                    {#                                <div class="review">#}
-                    {#                                    <ul class="list list-inline comment-meta">#}
-                    {#                                        <li>#}
-                    {#                                            <i class="fa fa-star color-theme"></i>#}
-                    {#                                            <i class="fa fa-star color-theme"></i>#}
-                    {#                                            <i class="fa fa-star color-theme"></i>#}
-                    {#                                            <i class="fa fa-star color-theme"></i>#}
-                    {#                                            <i class="fa fa-star-half-o color-theme"></i>#}
-                    {#                                        </li>#}
-                    {#                                    </ul>#}
-                    {#                                </div>#}
-                    {#                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae sequi ipsa fugit#}
-                    {#                                    officia eos! Sapiente laboriosam molestiae praesentium ducimus culpa. Magnam, odit,#}
-                    {#                                    optio.</p>#}
-                    {#                                <cite>Joe Doe</cite>#}
-                    {#                            </div>#}
-                    {#                        </div>#}
-                    {##}
-                    {#                        <div class="comments">#}
-                    {#                            <div class="comment-image">#}
-                    {#                                <figure>#}
-                    {#                                    <img src="/static/img/shop/products/small2.jpg" alt=""#}
-                    {#                                         class="img-fluid d-block">#}
-                    {#                                </figure>#}
-                    {#                            </div>#}
-                    {#                            <div class="comment-content">#}
-                    {#                                <div class="comment-content-head">#}
-                    {#                                    <h6 class="comment-title">Lorem ipsum dolor sit</h6>#}
-                    {#                                </div>#}
-                    {#                                <div class="review">#}
-                    {#                                    <ul class="list list-inline comment-meta">#}
-                    {#                                        <li>#}
-                    {#                                            <i class="fa fa-star color-theme"></i>#}
-                    {#                                            <i class="fa fa-star color-theme"></i>#}
-                    {#                                            <i class="fa fa-star color-theme"></i>#}
-                    {#                                            <i class="fa fa-star color-theme"></i>#}
-                    {#                                            <i class="fa fa-star-half-o color-theme"></i>#}
-                    {#                                        </li>#}
-                    {#                                    </ul>#}
-                    {#                                </div>#}
-                    {#                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae sequi ipsa fugit#}
-                    {#                                    officia eos! Sapiente laboriosam molestiae praesentium ducimus culpa. Magnam, odit,#}
-                    {#                                    optio.</p>#}
-                    {#                                <cite>Joe Doe</cite>#}
-                    {#                            </div>#}
-                    {#                        </div>#}
-                    {##}
-                    {#                    </div>#}
+
+                    <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                        {% if request.user.is_authenticated %}
+                            <form method="post" name="contact-form" id="ContactForm" novalidate="novalidate">
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12">
+                                        <div class="form-group">
+                                            {% csrf_token %}
+                                            <input type="hidden" id="parent_id" value="" name="parent_id">
+                                            <div class="form-group">
+                                                <textarea class="form-control" id="InputMessage" name="body"
+                                                          placeholder="Enter comment"></textarea>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <button class="custom-btn" type="submit">Post Comment</button>
+                                    </div>
+                                </div>
+                            </form>
+                        {% else %}
+                            <p class="alert alert-danger">Only logged in users can comment.</p>
+                        {% endif %}
+                        <br>
+                        {% for comment in product.product_comment.all %}
+                            {% if not comment.parent %}
+                                <div class="comments">
+                                    <div class="comment-content">
+                                        <p>
+                                            {{ comment.body }}
+                                        </p>
+                                        <a onclick="setReply({{ comment.id }})" class="custom-btn btn-comment-reply">Reply</a>
+                                        <cite>{{ comment.user }}</cite><br>
+                                        <cite>{{ comment.created | timesince }} - ago</cite>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% for reply in comment.replies.all %}
+                                <div class="comments m-lg-5">
+                                    <div class="comment-content">
+                                        <p>
+                                            {{ reply.body }}
+                                        </p><br>
+                                        <cite>{{ reply.user }}</cite><br>
+                                        <cite>{{ reply.created | timesince }} - ago</cite>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% empty %}
+                            <p>no comment yet</p>
+                        {% endfor %}
+
+                    </div>
                 </div>
             </div>
         </section>
         <!-- End Product -->
-
 
         <!-- Start Home Product -->
         <section class="home-main-contant-style2 lookbook-style">
@@ -664,4 +652,10 @@
         </section>
         <!-- End Product -->
     </div>
+    <script>
+        function setReply(Id) {
+            document.getElementById('parent_id').value = Id;
+            window.location.href = '#reply';
+        }
+    </script>
 {% endblock %}

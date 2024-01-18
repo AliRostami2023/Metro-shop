@@ -1,10 +1,13 @@
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Count
 from django.http import HttpRequest
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.utils.decorators import method_decorator
+from django.views import View
 from django.views.generic import ListView, DetailView
 
-from product.models import Product, Category, Brand
+from product.models import Product, Category, Brand, CommentProduct
 
 
 # Create your views here.
@@ -36,10 +39,21 @@ class ProductList(ListView):
         return query
 
 
-class ProductDetail(DetailView):
+class ProductDetail(View):
     template_name = 'product/product-detail.html'
-    model = Product
-    context_object_name = 'product'
+
+    def get(self, request, slug):
+        product = get_object_or_404(Product, slug=slug)
+        return render(request, self.template_name, {'product': product})
+
+    @method_decorator(login_required)
+    def post(self, request: HttpRequest, slug):
+        product = get_object_or_404(Product, slug=slug)
+
+        parent_id = request.POST.get('parent_id')
+        body = request.POST.get('body')
+        CommentProduct.objects.create(body=body, product=product, user=request.user, parent_id=parent_id)
+        return render(request, self.template_name, {'product': product})
 
 
 def product_category_component(request):

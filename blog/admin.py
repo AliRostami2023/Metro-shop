@@ -17,3 +17,6 @@ class ArticleAdmin(admin.ModelAdmin):
 class CategoryBlogAdmin(admin.ModelAdmin):
     list_display = ['title', 'parent', 'published']
     prepopulated_fields = {'url_title': ('title',)}
+
+
+admin.site.register(models.Comment)

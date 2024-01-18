@@ -35,7 +35,7 @@
                                 <div class="img_blog_text">
                                     <a href="{{ article.get_absolute_url }}"><h2>{{ article.title }}</h2></a>
                                     <div class="blog-meta">
-                                        <span class="blog-date"><i class="bi bi-calendar3"></i>{{ article.date }}</span>
+                                        <span class="blog-date"><i class="bi bi-calendar3"></i>{{ article.date | timesince }}</span>
                                         <span class="blog-comments"><i class="bi bi-chat"></i> 0 Comments</span>
                                     </div>
                                 </div>
