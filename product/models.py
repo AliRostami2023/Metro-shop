@@ -5,7 +5,6 @@ from django.utils.text import slugify
 from ckeditor.fields import RichTextField
 from star_ratings.models import Rating
 from django.contrib.contenttypes.fields import GenericRelation
-
 from account.models import User
 
 
@@ -17,12 +16,13 @@ class Category(models.Model):
     url_title = models.CharField(max_length=330, unique=True, blank=True)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True,
                                related_name='category_parent')
+    is_parent = models.BooleanField(default=False)
     image = models.ImageField(upload_to='uploads/category_image', null=True, blank=True)
     published = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.title} - {self.parent}"
+        return f"{self.title}"
 
     class Meta:
         verbose_name = 'category'

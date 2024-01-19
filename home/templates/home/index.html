@@ -256,7 +256,8 @@
                                             </a>
                                         </div>
                                         <div class="product-info">
-                                            <span class="category"><a href="{% url 'brand_url_page' brand=product.brand.url_title %}">{{ product.brand }}</a></span>
+                                            <span class="category"><a
+                                                    href="{% url 'brand_url_page' brand=product.brand.url_title %}">{{ product.brand }}</a></span>
                                             <h4 class="title">
                                                 <a href="{{ product.get_absolute_url }}">{{ product.title }}</a>
                                             </h4>
@@ -288,82 +289,27 @@
         <div class="container">
             <div class="headline"><h3>Latest News</h3></div>
             <div class="blog-slider owl-carousel">
-                <div class="item">
-                    <div class="image_blog">
-                        <div class="post-image"><img alt="" src="/static/img/blog/blog-img-1.jpg"
-                                                     class="img-fluid d-block">
-                        </div>
-                        <div class="img_blog_text">
-                            <a href="#"><h2>New Samsung Gear VR</h2></a>
-                            <div class="blog-meta">
-                                <span class="blog-date"><i class="bi bi-calendar3"></i> April 28, 2021</span>
-                                <span class="blog-comments"><i class="bi bi-chat"></i> 0 Comments</span>
+                {% for blog in blogs %}
+                    <div class="item">
+                        <div class="image_blog">
+                            <div class="post-image">
+                                {% thumbnail blog.image '367x190' crop='center' as im %}
+                                    <img alt="" src="{{ im.url }}" class="img-fluid d-block">
+                                {% endthumbnail %}
+                            </div>
+                            <div class="img_blog_text">
+                                <a href="{{ blog.get_absolute_url }}"><h2>{{ blog.title }}</h2></a>
+                                <div class="blog-meta">
+                                    <span class="blog-date"><i
+                                            class="bi bi-calendar3"></i>{{ blog.date | timesince }}</span>
+                                    <span class="blog-comments"><i
+                                            class="bi bi-chat"></i> {{ blog.article_comment.count }} Comments</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                {% endfor %}
 
-                <div class="item">
-                    <div class="image_blog">
-                        <div class="post-image"><img alt="" src="/static/img/blog/blog-img-4.jpg"
-                                                     class="img-fluid d-block">
-                        </div>
-                        <div class="img_blog_text">
-                            <a href="#"><h2>Google Smart Speaker for Home</h2></a>
-                            <div class="blog-meta">
-                                <span class="blog-date"><i class="bi bi-calendar3"></i> April 28, 2021</span><!-https://t.me/sabzrea
-                                ->
-                                <span class="blog-comments"><i class="bi bi-chat"></i> 0 Comments</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="item">
-                    <div class="image_blog">
-                        <div class="post-image"><img alt="" src="/static/img/blog/blog-img-3.jpg"
-                                                     class="img-fluid d-block">
-                        </div>
-                        <div class="img_blog_text">
-                            <a href="#"><h2>Drone HD Camera</h2></a>
-                            <div class="blog-meta">
-                                <span class="blog-date"><i class="bi bi-calendar3"></i> April 28, 2021</span>
-                                <span class="blog-comments"><i class="bi bi-chat"></i> 0 Comments</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="item">
-                    <div class="image_blog">
-                        <div class="post-image"><img alt="" src="/static/img/blog/blog-img-5.jpg"
-                                                     class="img-fluid d-block">
-                        </div>
-                        <div class="img_blog_text">
-                            <a href="#"><h2>Apple Watch Series 6</h2></a>
-                            <div class="blog-meta">
-                                <span class="blog-date"><i class="bi bi-calendar3"></i> April 28, 2021</span>
-                                <span class="blog-comments"><i class="bi bi-chat"></i> 0 Comments</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="item">
-                    <div class="image_blog">
-                        <div class="post-image"><img alt="" src="/static/img/blog/blog-img-2.jpg"
-                                                     class="img-fluid d-block">
-                        </div>
-                        <div class="img_blog_text">
-                            <a href="#"><h2>Wireless Game Controller</h2></a>
-                            <div class="blog-meta">
-                                <span class="blog-date"><i class="bi bi-calendar3"></i> April 28, 2021</span>
-                                <span class="blog-comments"><i class="bi bi-chat"></i> 0 Comments</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </section>

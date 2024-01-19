@@ -23,7 +23,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(models.Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ['title', 'parent', 'published']
+    list_display = ['title', 'parent', 'is_parent', 'published']
     prepopulated_fields = {'url_title': ('title',)}
 
 

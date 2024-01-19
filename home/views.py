@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView, CreateView
+
+from blog.models import Article, Comment
 from home.forms import ContactForm
 from home.models import ContactUs
 from order.cart import Cart
@@ -22,6 +24,7 @@ class IndexView(TemplateView):
             '-discount')[:10]
         context['product_more_rating'] = Product.objects.filter(published=True, rating__isnull=False).order_by(
             'rating__average')[:7]
+        context['blogs'] = Article.objects.order_by('-date')[:6]
         return context
 
 
@@ -34,7 +37,7 @@ class ContactUsView(CreateView):
 
 def site_header_component(request):
     cart = Cart(request)
-    categories = Category.objects.filter(published=True).all()
+    categories = Category.objects.filter(published=True, is_parent=False).all()
     settings = Setting.objects.filter(active=True).first()
     return render(request, 'shared/site-header-component.html',
                   {'cart': cart, 'categories': categories, 'settings': settings})
