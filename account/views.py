@@ -18,7 +18,7 @@ class RegisterView(View):
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             return redirect(reverse('login-page'))
-        return super(RegisterView, self).dispatch(*args, **kwargs)
+        return super().dispatch(*args, **kwargs)
 
     def get(self, request: HttpRequest):
         form = RegisterForm()
@@ -68,7 +68,7 @@ class LoginView(View):
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             return redirect(reverse('login-page'))
-        return super(LoginView, self).dispatch(*args, **kwargs)
+        return super().dispatch(*args, **kwargs)
 
     def get(self, request: HttpRequest):
         form = LoginForm()
