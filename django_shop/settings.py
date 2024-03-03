@@ -157,7 +157,6 @@ STAR_RATINGS_STAR_WIDTH = 12
 STAR_RATINGS_RERATE = False
 STAR_RATINGS_ANONYMOUS = False
 
-
 REST_FRAMEWORK = {
     'DEFAULT_THROTTLE_CLASSES': [
         'rest_framework.throttling.AnonRateThrottle',
@@ -188,3 +187,7 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=5)
 }
+
+MERCHANT = ""  # empty
+
+SANDBOX = True
