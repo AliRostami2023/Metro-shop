@@ -25,6 +25,13 @@ class Order(models.Model):
     def __str__(self):
         return f"{self.user.get_full_name()}-{self.first_name}-{self.is_paid}"
 
+    @property
+    def result_total_price(self):
+        total_amount = 0
+        for order_detail in self.order_items.all():
+            total_amount += order_detail.product.result_total_price * order_detail.quantity
+        return total_amount
+
     class Meta:
         verbose_name = 'order'
         verbose_name_plural = 'orders'
@@ -44,4 +51,3 @@ class OrderItem(models.Model):
     class Meta:
         verbose_name = 'item'
         verbose_name_plural = 'items'
-
