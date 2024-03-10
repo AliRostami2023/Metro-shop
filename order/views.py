@@ -10,17 +10,15 @@ from order.models import Order, OrderItem
 from product.models import Product
 import json
 import requests
-from django.conf import settings
 from account.models import User
 
-if settings.SANDBOX:
-    sandbox = 'sandbox'
-else:
-    sandbox = 'www'
-
-ZP_API_REQUEST = f"https://{sandbox}.zarinpal.com/pg/rest/WebGate/PaymentRequest.json"
-ZP_API_VERIFY = f"https://{sandbox}.zarinpal.com/pg/rest/WebGate/PaymentVerification.json"
-ZP_API_STARTPAY = f"https://{sandbox}.zarinpal.com/pg/StartPay/"
+MERCHANT = 'test'
+ZP_API_REQUEST = "https://api.zarinpal.com/pg/v4/payment/request.json"
+ZP_API_VERIFY = "https://api.zarinpal.com/pg/v4/payment/verify.json"
+ZP_API_STARTPAY = "https://www.zarinpal.com/pg/StartPay/{authority}"
+amount = 0 # Rial / Required
+email = ''  # Optional
+mobile = ''  # Optional
 description = "توضیحات مربوط به تراکنش را در این قسمت وارد کنید"
 CallbackURL = 'http://127.0.0.1:8000/order/verify'
 
@@ -28,13 +26,13 @@ CallbackURL = 'http://127.0.0.1:8000/order/verify'
 @login_required
 def request_payment(request):
     current_order, created = Order.objects.get_or_create(is_paid=False, user_id=request.user.id)
-    total_price = current_order.result_total_price()
+    total_price = current_order.total_price
 
     if total_price == 0:
         return redirect(reverse('cart-detail'))
     data = {
-        "MerchantID": settings.MERCHANT,
-        "Amount": total_price,
+        "MerchantID": MERCHANT,
+        "Amount": total_price * 10,
         "Description": description,
         # "Phone": phone,
         "CallbackURL": CallbackURL,
@@ -62,17 +60,17 @@ def request_payment(request):
 
 @login_required
 def verify_payment(request):
-    authority = request.GET['Authority']
     current_order, created = Order.objects.get_or_create(is_paid=False, user_id=request.user.id)
-    total_price = current_order.result_total_price()
+    total_price = current_order.total_price
     # user = User.objects.filter(id=request.user.id).first()
+    t_authority = request.GET['Authority']
 
     data = {
-        "MerchantID": settings.MERCHANT,
+        "MerchantID": MERCHANT,
         "Amount": total_price,
-        'Authority': authority,
-
+        'Authority': t_authority,
     }
+
     data = json.dumps(data)
     headers = {'content-type': 'application/json', 'content-length': str(len(data))}
 
@@ -84,9 +82,19 @@ def verify_payment(request):
             current_order.is_paid = True
             current_order.product_item.availability -= 1
             current_order.save()
-            return redirect(reverse('order:secces_payment_redirect'))
+            return redirect(reverse('success_payment'))
 
-    return redirect(reverse('order:unsecces_payment_redirect'))
+    return redirect(reverse('un_success_payment'))
+
+
+@login_required
+def success_payment(request: HttpRequest):
+    return render(request, 'order/success-payment.html', {})
+
+
+@login_required
+def un_success_payment(request: HttpRequest):
+    return render(request, 'order/un-success-payment.html', {})
 
 
 class CartDetail(View):
@@ -132,7 +140,8 @@ class CheckoutView(LoginRequiredMixin, View):
                                          state=cd['state'],
                                          city=cd['city'],
                                          zip_code=cd['zip_code'],
-                                         address=cd['address'])
+                                         address=cd['address']
+                                         )
             for item in cart:
                 OrderItem.objects.create(
                     order=order,
@@ -143,4 +152,5 @@ class CheckoutView(LoginRequiredMixin, View):
                     price=item['price'],
                 )
             cart.remove_cart()
+            return redirect(reverse('request'))
         return render(request, 'order/checkout.html', {'form': form})

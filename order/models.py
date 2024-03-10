@@ -9,6 +9,7 @@ from product.models import Product
 
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_order')
+    total_price = models.IntegerField(default=0)
     is_paid = models.BooleanField(default=False)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
@@ -27,10 +28,10 @@ class Order(models.Model):
 
     @property
     def result_total_price(self):
-        total_amount = 0
+        self.total_price = 0
         for order_detail in self.order_items.all():
-            total_amount += order_detail.product.result_total_price * order_detail.quantity
-        return total_amount
+            self.total_price += order_detail.product.result_total_price * order_detail.quantity
+        return self.total_price
 
     class Meta:
         verbose_name = 'order'

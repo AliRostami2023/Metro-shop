@@ -8,4 +8,6 @@ urlpatterns = [
     path('checkout/', views.CheckoutView.as_view(), name='checkout-cart'),
     path('request-payment/', views.request_payment, name='request'),
     path('verify-payment/', views.verify_payment, name='verify'),
+    path('success-payment/', views.success_payment, name='success_payment'),
+    path('un-success-payment/', views.un_success_payment, name='un_success_payment'),
 ]

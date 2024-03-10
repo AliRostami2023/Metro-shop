@@ -188,6 +188,3 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=5)
 }
 
-MERCHANT = ""  # empty
-
-SANDBOX = True
