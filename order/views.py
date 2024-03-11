@@ -12,6 +12,7 @@ import json
 import requests
 from account.models import User
 
+
 MERCHANT = 'test'
 ZP_API_REQUEST = "https://api.zarinpal.com/pg/v4/payment/request.json"
 ZP_API_VERIFY = "https://api.zarinpal.com/pg/v4/payment/verify.json"
@@ -25,8 +26,8 @@ CallbackURL = 'http://127.0.0.1:8000/order/verify'
 
 @login_required
 def request_payment(request):
-    current_order, created = Order.objects.get_or_create(is_paid=False, user_id=request.user.id)
-    total_price = current_order.total_price
+    cart = Cart(request)
+    total_price = cart.total()
 
     if total_price == 0:
         return redirect(reverse('cart-detail'))
@@ -60,8 +61,9 @@ def request_payment(request):
 
 @login_required
 def verify_payment(request):
-    current_order, created = Order.objects.get_or_create(is_paid=False, user_id=request.user.id)
-    total_price = current_order.total_price
+    cart = Cart(request)
+    total_price = cart.total()
+    order = Order.objects.filter(user_id=request.user.id).first()
     # user = User.objects.filter(id=request.user.id).first()
     t_authority = request.GET['Authority']
 
@@ -79,9 +81,9 @@ def verify_payment(request):
         response = res.json()
 
         if response['Status'] == 100:
-            current_order.is_paid = True
-            current_order.product_item.availability -= 1
-            current_order.save()
+            order.is_paid = True
+            order.product_item.availability -= 1
+            order.save()
             return redirect(reverse('success_payment'))
 
     return redirect(reverse('un_success_payment'))
