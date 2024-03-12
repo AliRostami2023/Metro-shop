@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpRequest
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views import View
 from order.cart import Cart
@@ -12,12 +12,11 @@ import json
 import requests
 from account.models import User
 
-
 MERCHANT = 'test'
 ZP_API_REQUEST = "https://api.zarinpal.com/pg/v4/payment/request.json"
 ZP_API_VERIFY = "https://api.zarinpal.com/pg/v4/payment/verify.json"
 ZP_API_STARTPAY = "https://www.zarinpal.com/pg/StartPay/{authority}"
-amount = 0 # Rial / Required
+amount = 0  # Rial / Required
 email = ''  # Optional
 mobile = ''  # Optional
 description = "توضیحات مربوط به تراکنش را در این قسمت وارد کنید"
@@ -25,15 +24,16 @@ CallbackURL = 'http://127.0.0.1:8000/order/verify'
 
 
 @login_required
-def request_payment(request):
-    cart = Cart(request)
-    total_price = cart.total()
+def send_request(request, pk):
+    order = get_object_or_404(Order, id=pk, user=request.user)
+    product = get_object_or_404(Product, id=pk)
+    order.save()
+    request.session['order_id'] = str(order.id)
+    request.session['product_id'] = str(product.id)
 
-    if total_price == 0:
-        return redirect(reverse('cart-detail'))
     data = {
         "MerchantID": MERCHANT,
-        "Amount": total_price * 10,
+        "Amount": order.total_price,
         "Description": description,
         # "Phone": phone,
         "CallbackURL": CallbackURL,
@@ -47,8 +47,8 @@ def request_payment(request):
         if response.status_code == 200:
             response = response.json()
             if response['Status'] == 100:
-                url = f"{ZP_API_STARTPAY}{response['Authority']}"
-                return redirect(url)
+                return {'status': True, 'url': ZP_API_STARTPAY + str(response['Authority']),
+                        'authority': response['Authority']}
             else:
                 return {'status': False, 'code': str(response['Status'])}
         return response
@@ -60,43 +60,34 @@ def request_payment(request):
 
 
 @login_required
-def verify_payment(request):
-    cart = Cart(request)
-    total_price = cart.total()
-    order = Order.objects.filter(user_id=request.user.id).first()
-    # user = User.objects.filter(id=request.user.id).first()
-    t_authority = request.GET['Authority']
+def verify(request, authority):
+    order_id = request.session['order_id']
+    order = Order.objects.get(id=int(order_id))
+    product_id = request.session['product_id']
+    product = Product.objects.get(id=product_id)
 
     data = {
         "MerchantID": MERCHANT,
-        "Amount": total_price,
-        'Authority': t_authority,
+        "Amount": order.total_price,
+        "Authority": authority,
     }
-
     data = json.dumps(data)
+    # set content length by data
     headers = {'content-type': 'application/json', 'content-length': str(len(data))}
+    response = requests.post(ZP_API_VERIFY, data=data, headers=headers)
 
-    res = requests.post(ZP_API_VERIFY, data=data, headers=headers)
-    if res.status_code == 200:
-        response = res.json()
-
+    if response.status_code == 200:
+        response = response.json()
         if response['Status'] == 100:
             order.is_paid = True
-            order.product_item.availability -= 1
+            product.availability -= 1
             order.save()
-            return redirect(reverse('success_payment'))
+            product.save()
 
-    return redirect(reverse('un_success_payment'))
-
-
-@login_required
-def success_payment(request: HttpRequest):
-    return render(request, 'order/success-payment.html', {})
-
-
-@login_required
-def un_success_payment(request: HttpRequest):
-    return render(request, 'order/un-success-payment.html', {})
+            return {'status': True, 'RefID': response['RefID']}
+        else:
+            return {'status': False, 'code': str(response['Status'])}
+    return response
 
 
 class CartDetail(View):
@@ -134,6 +125,7 @@ class CheckoutView(LoginRequiredMixin, View):
         if form.is_valid():
             cd = form.cleaned_data
             order = Order.objects.create(user=request.user,
+                                         total_price=cart.total(),
                                          first_name=cd['first_name'],
                                          last_name=cd['last_name'],
                                          email=cd['email'],
