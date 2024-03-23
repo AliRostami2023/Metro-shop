@@ -8,6 +8,7 @@ from django.utils.crypto import get_random_string
 from django.views import View
 from account.forms import RegisterForm, LoginForm, ForgetPasswordForm, ResetPasswordForm
 from account.models import User
+from utils.service_email import send_email
 
 
 # Create your views here.
@@ -40,7 +41,7 @@ class RegisterView(View):
                                 first_name=name, is_active=False)
                 new_user.set_password(password)
                 new_user.save()
-                # send email
+                send_email('verify account user', new_user.email, {'user': new_user}, 'send_email/verify-user.html')
                 messages.success(request, 'check email for active your account.')
 
         return render(request, 'account/register.html', {'form': form})
@@ -109,7 +110,7 @@ class ForgetPasswordView(View):
             user_email = form.cleaned_data.get('email')
             user: User = User.objects.filter(email__iexact=user_email).first()
             if user:
-                # send_email('تغییر کلمه عبور', user.email, {'user': user}, 'emails/reset-password.html')
+                send_email('reset password', user.email, {'user': user}, 'send_email/reset-password.html')
                 messages.success(request, 'check email please !')
                 return redirect(reverse('change-pass-page'))
 
