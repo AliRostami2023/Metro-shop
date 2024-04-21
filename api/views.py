@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from account.models import User
 from api.serializers import UserListSerializers, UserCreatSerializers, ProductListSerializers, BlogListSerializers, \
     OrderListSerializers, OrderItemSerializers, ProductCreateSerializers
-from rest_framework import generics
+from rest_framework import generics, permissions
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from blog.models import Article
 from order.models import Order, OrderItem
@@ -17,6 +17,8 @@ from product.models import Product
 
 
 class UserListApiView(APIView):
+    permission_classes = [IsAdminUser, IsAuthenticated]
+
     def get(self, request):
         queryset = User.objects.all()
         page_number = self.request.query_params.get('page', 1)
@@ -36,7 +38,6 @@ class UserCreateApiView(APIView):
             new_user.username = ser_data.validated_data.get('username')
             new_user.email = ser_data.validated_data.get('email')
             new_user.set_password(ser_data.validated_data.get('password'))
-            new_user.email_active_code = get_random_string(72)
             new_user.save()
             return Response(ser_data.data, status.HTTP_201_CREATED)
         return Response(ser_data.errors, status.HTTP_400_BAD_REQUEST)
