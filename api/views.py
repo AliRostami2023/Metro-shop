@@ -1,16 +1,16 @@
 from django.core.paginator import Paginator
-from django.utils.crypto import get_random_string
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from account.models import User
-from api.serializers import UserListSerializers, UserCreatSerializers, ProductListSerializers, BlogListSerializers, \
-    OrderListSerializers, OrderItemSerializers, ProductCreateSerializers
-from rest_framework import generics, permissions
-from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from api.serializers import *
+from rest_framework import generics
+from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 from blog.models import Article
 from order.models import Order, OrderItem
 from product.models import Product
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth import authenticate, login
 
 
 # Create your views here.
@@ -39,8 +39,32 @@ class UserCreateApiView(APIView):
             new_user.email = ser_data.validated_data.get('email')
             new_user.set_password(ser_data.validated_data.get('password'))
             new_user.save()
-            return Response(ser_data.data, status.HTTP_201_CREATED)
+            refresh = RefreshToken.for_user(new_user)
+            return Response({'new_user': ser_data.data, 'refresh': str(refresh), 'access': str(refresh.access_token)},
+                             status.HTTP_201_CREATED)
         return Response(ser_data.errors, status.HTTP_400_BAD_REQUEST)
+    
+
+class UserLoginApiView(APIView):
+    serializer_class = UserLoginSerializers
+    permission_classes = [AllowAny]
+    queryset = User.objects.all()
+
+    def post(self, request):
+        email = request.data.get('email')
+        password = request.data.get('password')
+        self.serializer_class.is_valid(raise_exception=True)
+        user: User = User.objects.filter(email__iexact=email).first() 
+        if user and user.check_password(password):
+            login(request, user)
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                'refresh': str(refresh),
+                'access': str(refresh.access),
+            },
+            status=status.HTTP_200_OK)
+        return Response({'error': 'user not found'}, status.HTTP_404_NOT_FOUND)
+        # return Response({'message': 'information not valid !'}, status.HTTP_400_BAD_REQUEST)
 
 
 class ProductListApiView(generics.ListAPIView):

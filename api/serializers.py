@@ -14,6 +14,16 @@ class UserListSerializers(serializers.ModelSerializer):
         }
 
 
+class UserLoginSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('email', 'password',)
+        extra_kwargs = {
+            'password': {'read_only': True, 'required': True},
+            'email': {'required': True},
+        }
+
+
 class UserCreatSerializers(serializers.ModelSerializer):
     confirm_password = serializers.CharField(required=True, write_only=True)
 
@@ -26,6 +36,7 @@ class UserCreatSerializers(serializers.ModelSerializer):
             'username': {'required': True},
             'email': {'required': True},
             'password': {'required': True, 'write_only': True},
+            'confirm_password': {'required': True, 'write_only': True},
         }
 
     def validate(self, data):
