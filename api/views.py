@@ -10,8 +10,9 @@ from blog.models import Article
 from order.models import Order, OrderItem
 from product.models import Product
 from rest_framework_simplejwt.tokens import RefreshToken
-from django.contrib.auth import authenticate, login
-
+from django.contrib.auth import login
+from django_filters.rest_framework import DjangoFilterBackend
+from product.filters import ProductFilter
 
 # Create your views here.
 
@@ -70,6 +71,8 @@ class UserLoginApiView(APIView):
 class ProductListApiView(generics.ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductListSerializers
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = ProductFilter
 
 
 class ProductCreateApiView(generics.CreateAPIView):

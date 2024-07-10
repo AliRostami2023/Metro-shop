@@ -14,7 +14,7 @@ class ProductCommentInline(admin.TabularInline):
 
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['title', 'image_tag', 'price', 'discount', 'total_price', 'availability', 'published']
+    list_display = ['title', 'image_tag', 'price', 'discount', 'availability', 'published']
     list_filter = ['discount', 'published']
     prepopulated_fields = {'slug': ('title',)}
     search_fields = ['title', 'category', 'brand']

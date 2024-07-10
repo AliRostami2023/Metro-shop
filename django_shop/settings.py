@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'sorl.thumbnail',
     'django_cleanup',
     'ckeditor',
+    'django_filters',
     'ckeditor_uploader',
     'star_ratings',
     'rest_framework',
@@ -195,3 +196,8 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
 EMAIL_PORT = 587
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+}

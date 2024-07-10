@@ -178,24 +178,7 @@
                                     <ul class="nav-menu nav-menu-centered text-center">
                                         <li><a href="{% url 'home-page' %}">Home</a></li>
 
-                                        <li><a href="#">categories</a>
-                                            <ul class="nav-dropdown">
-                                                {% for category in categories %}
-                                                    <li>
-                                                        <a href="{% url 'category_url_page' category.url_title %}">{{ category.title }}
-                                                            <i
-                                                                    class="bi bi-chevron-right"></i></a>
-                                                        <ul class="inner-sub-category">
-                                                            {% for sub in category.category_parent.all %}
-                                                                <li>
-                                                                    <a href="{% url 'category_url_page' sub.url_title %}">{{ sub.title }}</a>
-                                                                </li>
-                                                            {% endfor %}
-                                                        </ul>
-                                                    </li>
-                                                {% endfor %}
-                                            </ul>
-                                        </li>
+                                        <li><a href="{% url "product-list" %}">Explore</a></li>
 
                                         <li><a href="{% url 'blog-list' %}">Blog</a></li>
                                         <li><a href="{% url 'contact-us-page' %}">Contact</a></li>

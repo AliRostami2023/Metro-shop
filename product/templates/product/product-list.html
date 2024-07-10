@@ -63,12 +63,12 @@
                                         <li>{% ratings product %}</li>
                                     </ul>
                                     <div class="price">
-                                        {% if product.discount %}
-                                            <span>${{ product.price }}.00</span>
+                                        {% comment %} {% if product.discount %} {% endcomment %}
+                                            {% comment %} <span>${{ product.price }}.00</span> {% endcomment %}
                                             <span class="discount-price">{{ product.result_total_price }}.00</span>
-                                        {% else %}
-                                            <span>${{ product.price }}.00</span>
-                                        {% endif %}
+                                        {% comment %} {% else %} {% endcomment %}
+                                            {% comment %} <span>${{ product.price }}.00</span> {% endcomment %}
+                                        {% comment %} {% endif %} {% endcomment %}
                                     </div>
                                 </div>
                                 <br>
@@ -94,12 +94,12 @@
                                         <li>{% ratings product %}</li>
                                     </ul>
                                     <div class="price">
-                                        {% if product.discount %}
-                                            <span>${{ product.price }}.00</span>
+                                        {% comment %} {% if product.discount %} {% endcomment %}
+                                            {% comment %} <span>${{ product.price }}.00</span> {% endcomment %}
                                             <span class="discount-price">{{ product.result_total_price }}.00</span>
-                                        {% else %}
-                                            <span>${{ product.price }}.00</span>
-                                        {% endif %}
+                                        {% comment %} {% else %} {% endcomment %}
+                                            {% comment %} <span>${{ product.price }}.00</span> {% endcomment %}
+                                        {% comment %} {% endif %} {% endcomment %}
                                     </div>
                                 <br>
                             {% endfor %}
@@ -118,17 +118,10 @@
                                 <ul class="view-mode">
                                     <li class="search_select">
                                         <div class="nice-select s_select" tabindex="0">
-                                            <span class="current">Sorting items</span>
-                                            <select class="list select-sort">
-                                                <option data-value="1" class="option selected focus">Price: Lowest first
-                                                </option>
-                                                <option data-value="2" class="option">Price: Highest first</option>
-                                                <option data-value="4" class="option">Product Name: A to Z</option>
-                                                <option data-value="2" class="option">Product Name: Z to A</option>
-                                                <option data-value="4" class="option">In stock</option>
-                                                <option data-value="4" class="option">Reference: Lowest first</option>
-                                                <option data-value="4" class="option">Reference: Highest first</option>
-                                            </select>
+                                            <form class="list select-sort">
+                                                {{ filterset.form.as_p }}
+                                                <input type='submit' value='submit' class='btn btn-success' >
+                                            </form>
                                         </div>
                                     </li>
                                 </ul>
@@ -161,8 +154,8 @@
                                         </ul>
                                         <div class="price">
                                             {% if product.discount %}
-                                                <span>${{ product.price }}.00</span>
-                                                <span class="discount-price">${{ product.result_total_price }}.00</span>
+                                                <span>${{ product.result_total_price }}.00</span>
+                                                <span class="discount-price">${{ product.price }}.00</span>
                                             {% else %}
                                                 <span>${{ product.price }}.00</span>
                                             {% endif %}

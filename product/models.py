@@ -38,7 +38,6 @@ class Product(models.Model):
     image = models.ImageField(upload_to='uploads/product_images')
     price = models.IntegerField()
     discount = models.SmallIntegerField(null=True, blank=True)
-    total_price = models.IntegerField(null=True, blank=True)
     color = models.ManyToManyField('Color', related_name='colors')
     size = models.ManyToManyField('Size', related_name='sizes')
     availability = models.SmallIntegerField(null=True, blank=True)
@@ -59,6 +58,7 @@ class Product(models.Model):
         elif self.discount:
             total = (self.discount * self.price) / 100
             return int(self.price - total)
+        return self.price
 
         return self.total_price
 
