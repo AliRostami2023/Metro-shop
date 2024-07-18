@@ -16,7 +16,7 @@ from product.models import Product, Category, Brand, CommentProduct
 class ProductList(ListView):
     template_name = 'product/product-list.html'
     model = Product
-    context_object_name = 'products'
+    # context_object_name = 'products'
     paginate_by = 9
 
     
@@ -41,6 +41,7 @@ class ProductList(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['filterset'] = self.filterset
+        context['products'] = Product.objects.prefetch_related('category').select_related('brand').filter(published=True)
         context["product_rating"] = Product.objects.filter(rating__isnull=False).order_by('rating__average')[:3]
         context["product_sale"] = Product.objects.filter(discount__isnull=False).order_by('-discount')[:3]
         return context
@@ -49,13 +50,17 @@ class ProductList(ListView):
 class ProductDetail(View):
     template_name = 'product/product-detail.html'
 
-    def get(self, request, slug):
-        product = get_object_or_404(Product, slug=slug)
+    def setup(self, request, *args, **kwargs):
+        self.product_single = get_object_or_404(Product, slug=kwargs['slug'])
+        return super().setup(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        product = self.product_single
         return render(request, self.template_name, {'product': product})
 
     @method_decorator(login_required)
-    def post(self, request: HttpRequest, slug):
-        product = get_object_or_404(Product, slug=slug)
+    def post(self, request: HttpRequest, *args, **kwargs):
+        product = self.product_single
 
         parent_id = request.POST.get('parent_id')
         body = request.POST.get('body')

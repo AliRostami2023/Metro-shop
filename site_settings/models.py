@@ -24,8 +24,8 @@ class Setting(models.Model):
     def __str__(self):
         return self.site_name
 
-    def logo(self):
-        return format_html('<img src = "{}" width=22% height=70px>'.format(self.logo_site.url))
+    # def logo(self):
+    #     return format_html('<img src = "{}" width=22% height=70px>'.format(self.logo_site.url))
 
     class Meta:
         verbose_name = 'setting'

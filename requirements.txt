@@ -6,6 +6,7 @@ Django==5.0
 django-braces==1.15.0
 django-ckeditor==6.7.0
 django-cleanup==8.0.0
+django-filter==24.2
 django-js-asset==2.1.0
 django-model-utils==4.3.1
 django-render-partial==0.4

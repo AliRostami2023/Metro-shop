@@ -10,7 +10,7 @@ class FooterLinkInline(admin.TabularInline):
 
 @admin.register(models.Setting)
 class SettingAdmin(admin.ModelAdmin):
-    list_display = ['site_name', 'site_url', 'logo', 'email', 'active']
+    list_display = ['site_name', 'site_url', 'email', 'active']
 
 
 @admin.register(models.FooterBox)

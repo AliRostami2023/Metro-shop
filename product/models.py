@@ -60,8 +60,6 @@ class Product(models.Model):
             return int(self.price - total)
         return self.price
 
-        return self.total_price
-
     def image_tag(self):
         return format_html('<img src = "{}" width=60% height=40px>'.format(self.image.url))
 
