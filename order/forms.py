@@ -66,3 +66,7 @@ class CheckoutForm(forms.ModelForm):
             except:
                 raise forms.ValidationError('Please enter valid phone number !!')
         return phone
+    
+
+class CouponFormField(forms.Form):
+    code = forms.CharField(label= 'coupon', widget=forms.TextInput(attrs={'class': 'form-control'}))

@@ -1,0 +1,27 @@
+<div class="xxl-3 col-xl-3 col-lg-3 col-md-5 col-sm-5 col-xs sidebar">
+    <!-- Link List -->
+    <div class="links mb30">
+        <div class="headline"><h3>Categories</h3></div>
+        <ul class="list-unstyled link-list">
+            {% for category in categories %}
+            <li>
+                <a href="{% url 'category-blog' category.url_title %}">{{ category.title }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <!-- End Link List -->
+
+
+    <div class="posts mb30">
+        <div class="headline"><h3>Recent Posts</h3></div>
+        <ul class="list-unstyled latest-list">
+            {% for blog in posts %}
+            <li>
+                <a href="#">{{ blog.title | truncatewords:3 }}</a>
+                <small>{{ blog.date | timesince }}</small>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>

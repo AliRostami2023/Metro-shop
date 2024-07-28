@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView, CreateView
-
-from blog.models import Article, Comment
+from blog.models import Article
 from home.forms import ContactForm
 from home.models import ContactUs
 from order.cart import Cart

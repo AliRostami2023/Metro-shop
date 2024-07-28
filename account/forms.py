@@ -1,5 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
+from captcha.fields import CaptchaField
 
 
 class RegisterForm(forms.Form):
@@ -8,6 +9,7 @@ class RegisterForm(forms.Form):
     email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder': 'email'}), label='')
     password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'password'}), label='')
     confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'confirm password'}), label='')
+    captcha = CaptchaField()
 
     def clean_confirm_password(self):
         password = self.cleaned_data.get('password')
@@ -32,20 +34,15 @@ class RegisterForm(forms.Form):
 
         # check username for more than 8 char and num
 
-        if len(username) < 8:
+        if len(username) < 8 and not any(char.isdigit() for char in username) or not any(char.isalpha() for char in username):
             raise ValidationError('username have to more than 8 char and number.')
-
-        # check username include char and number
-
-        if not any(char.isdigit() for char in username) or not any(char.isalpha() for char in username):
-            raise ValidationError('username have to include char and number.')
-
         return username
 
 
 class LoginForm(forms.Form):
     user_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'username'}), label='')
     password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'password'}), label='')
+    captcha = CaptchaField()
 
 
 class ForgetPasswordForm(forms.Form):

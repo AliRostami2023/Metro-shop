@@ -1,7 +1,7 @@
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import Http404, HttpRequest
+from django.http import Http404
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import View
@@ -28,30 +28,36 @@ def sidebar_profile_component(request):
 
 
 class EditInfoUserView(LoginRequiredMixin, View):
-    def get(self, request):
-        current_user = User.objects.filter(id=request.user.id).first()
-        form = EditProfileModelForm(instance=current_user)
+    template_name = 'panel/edit-info.html'
+    form_class = EditProfileModelForm
 
-        return render(request, 'panel/edit-info.html', {'form': form, 'current_user': current_user})
+    def setup(self, request, *args, **kwargs):
+        self.user_instance = User.objects.filter(id=request.user.id).first()
+        return super().setup(request, *args, **kwargs)
 
-    def post(self, request: HttpRequest):
-        current_user = User.objects.filter(id=request.user.id).first()
-        form = EditProfileModelForm(request.POST, request.FILES, instance=current_user)
+    def get(self, request, *args, **kwargs):
+        form = self.form_class(instance=self.user_instance)
+        return render(request, self.template_name, {'form': form, 'current_user': self.user_instance})
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST, request.FILES, instance=self.user_instance)
 
         if form.is_valid():
             form.save()
             return redirect(reverse('profile-page'))
-
-        return render(request, 'panel/edit-info.html', {'form': form, 'current_user': current_user})
+        return render(request, self.template_name, {'form': form, 'current_user': self.user_instance})
 
 
 class ChangePasswordPanel(LoginRequiredMixin, View):
+    template_name = 'panel/change-password.html'
+    form_class = ChangePasswordUserForm
+
     def get(self, request):
-        form = ChangePasswordUserForm()
-        return render(request, 'panel/change-password.html', {'form': form})
+        form = self.form_class()
+        return render(request, self.template_name, {'form': form})
 
     def post(self, request):
-        form = ChangePasswordUserForm(request.POST)
+        form = self.form_class(request.POST)
         if form.is_valid():
             current_user: User = User.objects.filter(id=request.user.id).first()
             if current_user.check_password(form.cleaned_data.get('current_password')):
@@ -61,8 +67,7 @@ class ChangePasswordPanel(LoginRequiredMixin, View):
                 return redirect(reverse('login-page'))
             else:
                 form.add_error('current_password', 'current password is wrong!!!')
-
-        return render(request, 'panel/change-password.html', {'form': form})
+        return render(request, self.template_name, {'form': form})
 
 
 class MyShopping(LoginRequiredMixin, ListView):

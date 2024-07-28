@@ -56,7 +56,9 @@ class ProductDetail(View):
 
     def get(self, request, *args, **kwargs):
         product = self.product_single
-        return render(request, self.template_name, {'product': product})
+        categories = Category.objects.all()
+        related_product = Product.objects.prefetch_related('category').filter(category__in=categories).exclude(pk=product.pk).distinct()
+        return render(request, self.template_name, {'product': product, 'related_product': related_product})
 
     @method_decorator(login_required)
     def post(self, request: HttpRequest, *args, **kwargs):

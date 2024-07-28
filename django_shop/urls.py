@@ -8,6 +8,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('ckeditor/', include('ckeditor_uploader.urls')),
     path('ratings/', include('star_ratings.urls', namespace='ratings')),
+    path('captcha/', include('captcha.urls')),
     path('', include('home.urls')),
     path('account/', include('account.urls')),
     path('products/', include('product.urls')),

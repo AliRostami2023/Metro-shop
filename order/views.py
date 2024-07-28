@@ -5,12 +5,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views import View
 from order.cart import Cart
-from order.forms import CheckoutForm
-from order.models import Order, OrderItem
+from order.forms import CheckoutForm, CouponFormField
+from order.models import Order, OrderItem, Coupon
 from product.models import Product
+import datetime
 import json
 import requests
-from account.models import User
+
 
 MERCHANT = 'test'
 ZP_API_REQUEST = "https://api.zarinpal.com/pg/v4/payment/request.json"
@@ -91,10 +92,12 @@ def verify(request, authority):
 
 
 class CartDetail(View):
+    form_class = CouponFormField
+
     def get(self, request):
         cart = Cart(request)
         product = Product.objects.all()
-        return render(request, 'order/cart-detail.html', {'cart': cart, 'product': product})
+        return render(request, 'order/cart-detail.html', {'cart': cart, 'product': product, 'form': self.form_class})
 
 
 class AddProduct(View):
@@ -103,25 +106,28 @@ class AddProduct(View):
         color, size, quantity = request.POST.get('color'), request.POST.get('size'), request.POST.get('p_quantity')
         cart = Cart(request)
         cart.add(quantity, size, color, product)
-        return redirect(reverse('cart-detail'))
+        return redirect(product.get_absolute_url())
 
 
 class DeleteItemCart(View):
     def get(self, request, id):
         cart = Cart(request)
         cart.delete_item(id)
-        return redirect(reverse('cart-detail'))
+        return redirect(reverse('cart-detail', cart.id))
 
 
 class CheckoutView(LoginRequiredMixin, View):
+    template_name = 'order/checkout.html'
+    form_class = CheckoutForm
+
     def get(self, request: HttpRequest):
         cart = Cart(request)
-        form = CheckoutForm()
-        return render(request, 'order/checkout.html', {'form': form, 'cart': cart})
+        form = self.form_class()
+        return render(request, self.template_name, {'form': form, 'cart': cart})
 
     def post(self, request: HttpRequest):
         cart = Cart(request)
-        form = CheckoutForm(request.POST)
+        form = self.form_class(request.POST)
         if form.is_valid():
             cd = form.cleaned_data
             order = Order.objects.create(user=request.user,
@@ -147,4 +153,24 @@ class CheckoutView(LoginRequiredMixin, View):
                 )
             cart.remove_cart()
             return redirect(reverse('request'))
-        return render(request, 'order/checkout.html', {'form': form})
+        return render(request, self.template_name, {'form': form})
+
+
+class CouponOrderView(LoginRequiredMixin, View):
+    form_class = CouponFormField
+
+    def post(self, request):
+        now = datetime.datetime.now()
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            code = form.cleaned_data['code']
+            try:
+                coupon = Coupon.objects.get(code__exact=code, valid_from__lte=now, valid_to__gte=now, active=True)
+            except Coupon.DoesNotExist:
+                return redirect(reverse('cart-detail'))
+            order = Order.objects.get(id=order.id)
+            order.discount = coupon.discount
+            order.save()
+        return redirect(reverse('cart-detail'))
+
+    

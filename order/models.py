@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.core.validators import MaxValueValidator, MinValueValidator
 from account.models import User
 from product.models import Product
 
@@ -10,6 +10,7 @@ from product.models import Product
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_order')
     total_price = models.IntegerField(default=0)
+    discount = models.IntegerField(default=0)
     is_paid = models.BooleanField(default=False)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
@@ -25,6 +26,9 @@ class Order(models.Model):
 
     def __str__(self):
         return f"{self.user.get_full_name()}-{self.first_name}-{self.is_paid}"
+    
+    def total(self):
+        total = sum()
 
     class Meta:
         verbose_name = 'order'
@@ -45,3 +49,15 @@ class OrderItem(models.Model):
     class Meta:
         verbose_name = 'item'
         verbose_name_plural = 'items'
+
+
+class Coupon(models.Model):
+    code = models.CharField(max_length=35, unique=True)
+    valid_from = models.DateTimeField()
+    valid_to = models.DateTimeField()
+    discount = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(90)])
+    active = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.code
+    

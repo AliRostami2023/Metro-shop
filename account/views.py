@@ -1,8 +1,7 @@
-from typing import Any
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpRequest, Http404
+from django.http import Http404
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils.crypto import get_random_string
@@ -22,7 +21,7 @@ class RegisterView(View):
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             return redirect(reverse('login-page'))
-        return super().dispatch(*args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request):
         form = self.form_class()
@@ -31,6 +30,7 @@ class RegisterView(View):
     def post(self, request):
         form = self.form_class(request.POST)
         if form.is_valid():
+            human = True
             name = form.cleaned_data.get('name')
             user_name = form.cleaned_data.get('user_name')
             user_email = form.cleaned_data.get('email')
@@ -78,7 +78,7 @@ class LoginView(View):
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             return redirect(reverse('login-page'))
-        return super().dispatch(*args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         form = self.form_class()
@@ -87,6 +87,7 @@ class LoginView(View):
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         if form.is_valid():
+            human = True
             user_name = form.cleaned_data.get('user_name')
             password = form.cleaned_data.get('password')
             user: User = User.objects.filter(username__iexact=user_name).first()

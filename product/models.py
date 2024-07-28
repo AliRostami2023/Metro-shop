@@ -173,3 +173,12 @@ class CommentProduct(models.Model):
         verbose_name_plural = 'comments'
         ordering = ['-created']
 
+
+class FavoriteProduct(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='fproduct')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='fuser')
+
+    def __str__(self):
+        return f"{self.product.title[:7]} - {self.user.get_full_name}"
+    
+    

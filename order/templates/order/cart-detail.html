@@ -69,7 +69,7 @@
                                             {% endif %}
                                             <td class="text-center text-lg text-medium">${{ item.total }}</td>
                                             <td class="text-center"><a class="remove-from-cart"
-                                                                       href="{% url "delete-item-cart" item.unique_id %}"
+                                                                       href="{% url 'delete-item-cart' item.unique_id %}"
                                                                        data-toggle="tooltip"
                                                                        title="" data-original-title="Remove item"><i
                                                     class="far fa-trash-alt"></i></a></td>
@@ -79,14 +79,21 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="cart-total-btn d-flex">
+                            {% comment %} <div class="cart-total-btn d-flex">
 
                                 <a href="index-2.html" class="custom-btn">
                                     <div class="btn-icon">Continue shopping</div>
                                 </a>
-                            </div>
+                            </div> {% endcomment %}
                         </div>
                         <div class="xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs">
+                            <form action='{% url "coupon" %}' method='post'>
+                                <div class='col-md-5'>
+                                {% csrf_token %}
+                                {{ form }}
+                                </div>
+                                <button type='submit' class='btn btn-success'>submit</button>
+                            </form>
                             <div class="cart-totals bg-grey pall">
                                 <h2>Cart totals</h2>
                                 <div class="cart-summary-line">

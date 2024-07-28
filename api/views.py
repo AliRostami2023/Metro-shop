@@ -18,7 +18,7 @@ from product.filters import ProductFilter
 
 
 class UserListApiView(APIView):
-    permission_classes = [IsAdminUser, IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         queryset = User.objects.all()

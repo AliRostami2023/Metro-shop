@@ -1,5 +1,6 @@
 {% extends 'shared/layout.html' %}
 {% load thumbnail %}
+{% load render_partial %}
 
 
 {% block title %}
@@ -120,82 +121,7 @@
 
                 </div>
 
-                <div class="xxl-3 col-xl-3 col-lg-3 col-md-5 col-sm-5 col-xs sidebar">
-                    <!-- Link List -->
-                    <div class="links mb30">
-                        <div class="headline"><h3>Categories</h3></div>
-                        <ul class="list-unstyled link-list">
-                            <li><a href="#">E-commerce</a></li>
-                            <li><a href="#">Business</a></li>
-                            <li><a href="#">Responsive</a></li>
-                            <li><a href="#">Portfolio</a></li>
-                            <li><a href="#">Corporate</a></li>
-                        </ul>
-                    </div>
-                    <!-- End Link List -->
-
-
-                    <div class="posts mb30">
-                        <div class="headline"><h3>Recent Posts</h3></div>
-                        <ul class="list-unstyled latest-list">
-                            <li>
-                                <a href="#">Marketing Plans</a>
-                                <small>January 8, 2021</small>
-                            </li>
-                            <li>
-                                <a href="#">Social Marketing</a>
-                                <small>March 01, 2021</small>
-                            </li>
-                            <li>
-                                <a href="#">Web Development</a>
-                                <small>April 29, 2021</small>
-                            </li>
-                        </ul>
-                    </div>
-
-
-                    <div class="posts mb30">
-                        <div class="headline"><h3>Recent Comments</h3></div>
-                        <ul class="list-unstyled latest-list">
-                            <li><i class="bi bi-chat"></i> <span>Craftdzine on </span> <a href="#">Marketing Plans</a>
-                            </li>
-                            <li>
-                                <i class="bi bi-chat"></i> <span>Craftdzine on </span> <a href="#">Social Marketing</a>
-
-                            </li>
-                            <li>
-                                <i class="bi bi-chat"></i> <span>Craftdzine on </span> <a href="#">Web Development</a>
-
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="posts mb30">
-                        <div class="headline"><h3>Archives</h3></div>
-                        <ul class="list-unstyled latest-list">
-                            <li><a href="#">February 2021</a></li>
-                            <li><a href="#">March 2021</a></li>
-                            <li><a href="#">April 2021</a></li>
-                            <li><a href="#">January 2021</a></li>
-
-                        </ul>
-                    </div>
-
-
-                    <!-- TAGS WIDGET -->
-                    <div class="widget">
-                        <div class="headline"><h3>Tags</h3></div>
-                        <div class="tags">
-                            <a href="#">bootstrap</a>
-                            <a href="#">business</a>
-                            <a href="#">corporate</a>
-                            <a href="#">e-commerce</a>
-                            <a href="#">portfolio</a>
-                            <a href="#">responsive</a>
-                        </div>
-                    </div>
-                    <!-- END TAGS WIDGET -->
-                </div>
+                {% render_partial 'blog.views.sidebar_blog_component' %}
             </div>
         </div>
     </section>
