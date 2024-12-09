@@ -25,12 +25,17 @@ class ProductAdmin(admin.ModelAdmin):
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ['title', 'parent', 'is_parent', 'published']
     prepopulated_fields = {'url_title': ('title',)}
+    list_filter = ['is_parent']
+    raw_id_fields = ['parent']
+    list_per_page = 10
+    search_fields = ['title']
 
 
 @admin.register(models.Brand)
 class BrandAdmin(admin.ModelAdmin):
     list_display = ['title', 'url_title', 'published']
     prepopulated_fields = {'url_title': ('title',)}
+    search_fields = ['title']
 
 
 @admin.register(models.ImagesProduct)

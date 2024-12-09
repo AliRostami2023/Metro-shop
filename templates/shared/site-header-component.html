@@ -82,12 +82,12 @@
                 <div class="col-lg-2 col-md-4 col-sm-4 col-xs">
                     <!-- Cart -->
                     <div class="navbar-cart">
-                        <div class="wishlist">
+                        {% comment %} <div class="wishlist">
                             <a href="javascript:void(0)">
                                 <i class="bi bi-people"></i>
                                 <span class="total-items">0</span>
                             </a>
-                        </div>
+                        </div> {% endcomment %}
                         <div class="cart-items">
                             <a href="javascript:void(0)" class="cart-icon">
                                 <i class="bi bi-cart-check"></i>
@@ -151,18 +151,35 @@
                         <span class="cat-button"><i class="bi bi-list"></i>Categories</span>
                         <ul class="sub-category">
                             {% for category in categories %}
+                            {% if category.parent is None and category.is_parent %}
                                 <li><a href="{% url 'category_url_page' category.url_title %}">{{ category.title }} <i
                                         class="bi bi-chevron-right"></i></a>
+                                        {% with category.category_parent.all as subcategories %}
+                                        {% if subcategories %}
                                     <ul class="inner-sub-category">
-                                        {% for sub in category.category_parent.all %}
+                                        {% for sub in subcategories %}
                                             <li>
                                                 <a href="{% url 'category_url_page' sub.url_title %}">{{ sub.title }}</a>
+                                                {% with sub.category_parent.all as childcategories %}
+                                                {% if childcategories %}
+                                                <ul>
+                                                    {% for child in childcategories %}
+                                                        <li>
+                                                            <a href="{% url 'category_url_page' child.url_title %}">{{ child.title }}</a>
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                                {% endif %}
+                                                {% endwith %}
                                             </li>
                                         {% endfor %}
                                     </ul>
-
+                                    {% endif %}
+                                    {% endwith %}
                                 </li>
-                            {% endfor %}
+                            </li>
+                            {% endif %}
+                        {% endfor %}
                         </ul>
                     </div>
                     <!-- End Mega Category Menu -->
@@ -178,7 +195,7 @@
                                     <ul class="nav-menu nav-menu-centered text-center">
                                         <li><a href="{% url 'home-page' %}">Home</a></li>
 
-                                        <li><a href="{% url "product-list" %}">Explore</a></li>
+                                        <li><a href="{% url "product-list" %}">Shop</a></li>
 
                                         <li><a href="{% url 'blog-list' %}">Blog</a></li>
                                         <li><a href="{% url 'contact-us-page' %}">Contact</a></li>

@@ -51,6 +51,6 @@ class BlogDetail(View):
 
 
 def sidebar_blog_component(request):
-    categories = CategoryBlog.objects.filter(parent__isnull=True)
+    categories = CategoryBlog.objects.all()
     recent_post = Article.objects.order_by('?')[:7]
     return render(request, 'components/sidebar-blog.html', {'categories': categories, 'posts': recent_post})

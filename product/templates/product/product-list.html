@@ -28,23 +28,6 @@
 
                     {% render_partial 'product.views.product_category_component' %}
 
-                    <aside>
-                        <div class="price-range-block mb30">
-                            <div class="headline-left"><h3>By Price</h3></div>
-                            <div class="price-range">
-                                <span id="amount">$0 - $400</span>
-                                <div id="slider-range"
-                                     class="ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all"
-                                     aria-disabled="false">
-                                    <div class="ui-slider-range ui-widget-header ui-corner-all"
-                                         style="left: 0%; width: 80%;"></div>
-                                    <a class="ui-slider-handle ui-state-default ui-corner-all" href="#"
-                                       style="left: 0%;"></a><a class="ui-slider-handle ui-state-default ui-corner-all"
-                                                                href="#" style="left: 80%;"></a></div>
-                            </div>
-                        </div>
-                    </aside>
-
                     {% render_partial 'product.views.product_brand_component' %}
 
                     <aside>
@@ -112,21 +95,6 @@
 
                 <div class="xxl-9 col-xl-9 col-lg-9 col-md-4 col-sm-12 col-xs">
                     <div class="row">
-                        <div class="col-xs">
-                            <div class="product-filter-content advanced_search">
-                                {#                                <p>Showing Products 1-9 Result</p>#}
-                                <ul class="view-mode">
-                                    <li class="search_select">
-                                        <div class="nice-select s_select" tabindex="0">
-                                            <form class="list select-sort">
-                                                {{ filterset.form.as_p }}
-                                                <input type='submit' value='submit' class='btn btn-success' >
-                                            </form>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
 
                         {% for product in object_list %}
                             <div class="col-xxl-3 col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs">

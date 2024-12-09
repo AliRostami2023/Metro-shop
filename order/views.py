@@ -1,94 +1,114 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views import View
+from django.conf import settings
 from order.cart import Cart
+import datetime
+import requests
 from order.forms import CheckoutForm, CouponFormField
 from order.models import Order, OrderItem, Coupon
 from product.models import Product
-import datetime
-import json
-import requests
 
 
-MERCHANT = 'test'
-ZP_API_REQUEST = "https://api.zarinpal.com/pg/v4/payment/request.json"
-ZP_API_VERIFY = "https://api.zarinpal.com/pg/v4/payment/verify.json"
-ZP_API_STARTPAY = "https://www.zarinpal.com/pg/StartPay/{authority}"
-amount = 0  # Rial / Required
-email = ''  # Optional
-mobile = ''  # Optional
-description = "توضیحات مربوط به تراکنش را در این قسمت وارد کنید"
-CallbackURL = 'http://127.0.0.1:8000/order/verify'
+
+ZIBAL_BASE_URL = "https://gateway.zibal.ir" if not settings.ZIBAL_SANDBOX else "https://sandbox.zibal.ir"
+ZIBAL_API_REQUEST = f"{ZIBAL_BASE_URL}/v1/request"
+ZIBAL_API_VERIFY = f"{ZIBAL_BASE_URL}/v1/verify"
+ZIBAL_API_STARTPAY = f"{ZIBAL_BASE_URL}/start/"
 
 
 @login_required
 def send_request(request, pk):
-    order = get_object_or_404(Order, id=pk, user=request.user)
-    product = get_object_or_404(Product, id=pk)
-    order.save()
-    request.session['order_id'] = str(order.id)
-    request.session['product_id'] = str(product.id)
+    order = Order.objects.get(id=pk, user=request.user)
+    product = Product.objects.get(id=pk)
 
+    # ذخیره اطلاعات در سشن برای استفاده در مرحله تأیید پرداخت
+    request.session['order_id'] == str(order.id)
+    request.session['product_id'] == str(product.id)
+
+    print(f"Session Order ID (after setting): {request.session.get('order_id')}")
+    print(f"Session Product ID (after setting): {request.session.get('product_id')}")
+
+
+    # URL بازگشت
+    callback_url = request.build_absolute_uri('/cart/verify-payment/')
+    print(f"Callback URL: {callback_url}")
+
+    # داده‌های درخواست به زیبال
     data = {
-        "MerchantID": MERCHANT,
-        "Amount": order.total_price,
-        "Description": description,
-        # "Phone": phone,
-        "CallbackURL": CallbackURL,
+        "merchant": settings.ZIBAL_MERCHANT,  # Merchant ID از تنظیمات
+        "amount": order.total_price,  # مبلغ به ریال
+        "callbackUrl": callback_url,  # URL بازگشت
+        "description": f"پرداخت سفارش شماره {order.id}",
     }
-    data = json.dumps(data)
-    # set content length by data
-    headers = {'content-type': 'application/json', 'content-length': str(len(data))}
     try:
-        response = requests.post(ZP_API_REQUEST, data=data, headers=headers, timeout=10)
+        # ارسال درخواست به زیبال
+        response = requests.post(ZIBAL_API_REQUEST, json=data, timeout=10)
+        print(f"Zibal Request Data: {data}")
+        print(f"Zibal Response: {response.json()}")
 
+    
         if response.status_code == 200:
-            response = response.json()
-            if response['Status'] == 100:
-                return {'status': True, 'url': ZP_API_STARTPAY + str(response['Authority']),
-                        'authority': response['Authority']}
+            response_data = response.json()
+            if response_data["result"] == 100:  # موفقیت
+                return redirect(ZIBAL_API_STARTPAY + str(response_data["trackId"]))
             else:
-                return {'status': False, 'code': str(response['Status'])}
-        return response
+                return HttpResponse(f"خطا در درخواست پرداخت: {response_data['message']}")
+        else:
+            return HttpResponse("خطا در اتصال به درگاه زیبال")
+    except requests.exceptions.RequestException as e:
+        return HttpResponse(f"خطا: {str(e)}")
 
-    except requests.exceptions.Timeout:
-        return {'status': False, 'code': 'timeout'}
-    except requests.exceptions.ConnectionError:
-        return {'status': False, 'code': 'connection error'}
 
 
 @login_required
-def verify(request, authority):
-    order_id = request.session['order_id']
-    order = Order.objects.get(id=int(order_id))
-    product_id = request.session['product_id']
-    product = Product.objects.get(id=product_id)
+def verify_payment(request):
+    # دریافت مقادیر از سشن
+    order_id = request.session.get('order_id')
+    product_id = request.session.get('product_id')
+    track_id = request.GET.get("trackId")
 
+    print(f"Order ID: {order_id}")
+    print(f"Product ID: {product_id}")
+    print(f"Track ID: {track_id}")
+
+    if not order_id or not product_id or not track_id:
+        return HttpResponse("اطلاعات پرداخت ناقص است!")
+
+    # بازیابی سفارش و محصول
+    order = get_object_or_404(Order, id=int(order_id))
+    product = get_object_or_404(Product, id=int(product_id))
+
+    # داده‌های تأیید پرداخت
     data = {
-        "MerchantID": MERCHANT,
-        "Amount": order.total_price,
-        "Authority": authority,
+        "merchant": settings.ZIBAL_MERCHANT,  # Merchant ID
+        "trackId": track_id,  # شناسه تراکنش
     }
-    data = json.dumps(data)
-    # set content length by data
-    headers = {'content-type': 'application/json', 'content-length': str(len(data))}
-    response = requests.post(ZP_API_VERIFY, data=data, headers=headers)
 
-    if response.status_code == 200:
-        response = response.json()
-        if response['Status'] == 100:
-            order.is_paid = True
-            product.availability -= 1
-            order.save()
-            product.save()
+    try:
+        # ارسال درخواست تأیید به زیبال
+        response = requests.post(ZIBAL_API_VERIFY, json=data, timeout=10)
 
-            return {'status': True, 'RefID': response['RefID']}
+        if response.status_code == 200:
+            response_data = response.json()
+            if response_data["result"] == 100:  # تأیید موفق
+                # بروزرسانی وضعیت سفارش و محصول
+                order.is_paid = True
+                product.availability -= 1
+                order.save()
+                product.save()
+
+                return HttpResponse(f"پرداخت با موفقیت انجام شد. کد رهگیری: {response_data['refNumber']}")
+            else:
+                return HttpResponse(f"پرداخت ناموفق: {response_data['message']}")
         else:
-            return {'status': False, 'code': str(response['Status'])}
-    return response
+            return HttpResponse("خطا در اتصال به سرویس تأیید پرداخت زیبال")
+    except requests.exceptions.RequestException as e:
+        return HttpResponse(f"خطا: {str(e)}")
+
 
 
 class CartDetail(View):
@@ -98,6 +118,7 @@ class CartDetail(View):
         cart = Cart(request)
         product = Product.objects.all()
         return render(request, 'order/cart-detail.html', {'cart': cart, 'product': product, 'form': self.form_class})
+
 
 
 class AddProduct(View):

@@ -36,7 +36,7 @@ class ContactUsView(CreateView):
 
 def site_header_component(request):
     cart = Cart(request)
-    categories = Category.objects.filter(published=True, is_parent=False).all()
+    categories = Category.objects.filter(published=True)
     settings = Setting.objects.filter(active=True).first()
     return render(request, 'shared/site-header-component.html',
                   {'cart': cart, 'categories': categories, 'settings': settings})

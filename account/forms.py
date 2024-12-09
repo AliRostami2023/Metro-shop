@@ -5,7 +5,6 @@ from captcha.fields import CaptchaField
 
 class RegisterForm(forms.Form):
     name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'name'}), label='')
-    user_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'username'}), label='')
     email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder': 'email'}), label='')
     password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'password'}), label='')
     confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'confirm password'}), label='')
@@ -29,18 +28,9 @@ class RegisterForm(forms.Form):
 
         raise ValidationError('password have to more than 8 char or number.')
 
-    def clean_user_name(self):
-        username = self.cleaned_data.get('user_name')
-
-        # check username for more than 8 char and num
-
-        if len(username) < 8 and not any(char.isdigit() for char in username) or not any(char.isalpha() for char in username):
-            raise ValidationError('username have to more than 8 char and number.')
-        return username
-
 
 class LoginForm(forms.Form):
-    user_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'username'}), label='')
+    email = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'email'}), label='')
     password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'password'}), label='')
     captcha = CaptchaField()
 

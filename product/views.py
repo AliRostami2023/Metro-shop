@@ -10,14 +10,12 @@ from .filters import ProductFilter
 from product.models import Product, Category, Brand, CommentProduct
 
 
-# Create your views here.
-
 
 class ProductList(ListView):
     template_name = 'product/product-list.html'
     model = Product
     # context_object_name = 'products'
-    paginate_by = 9
+    paginate_by = 8
 
     
     def get_queryset(self):

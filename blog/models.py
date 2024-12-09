@@ -5,14 +5,11 @@ from django.utils.html import format_html
 from account.models import User
 
 
-# Create your models here.
-
 
 class CategoryBlog(models.Model):
     title = models.CharField(max_length=300)
     url_title = models.CharField(max_length=350, unique=True, blank=True)
     image = models.ImageField(upload_to='uploads/blog_image', null=True, blank=True)
-    parent = models.ForeignKey('self', on_delete=models.CASCADE,related_name='parent_category', null=True, blank=True)
     published = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
 
@@ -35,6 +32,7 @@ class Article(models.Model):
     update = models.DateTimeField(auto_now=True)
     body = RichTextField()
     published = models.BooleanField(default=True)
+
 
     def __str__(self):
         return self.title

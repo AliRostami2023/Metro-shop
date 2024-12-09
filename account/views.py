@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import login, logout
+from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
 from django.shortcuts import render, redirect
@@ -7,11 +8,10 @@ from django.urls import reverse
 from django.utils.crypto import get_random_string
 from django.views import View
 from account.forms import RegisterForm, LoginForm, ForgetPasswordForm, ResetPasswordForm
-from account.models import User
 from utils.service_email import send_email
 
 
-# Create your views here.
+User = get_user_model()
 
 
 class RegisterView(View):
@@ -32,7 +32,6 @@ class RegisterView(View):
         if form.is_valid():
             human = True
             name = form.cleaned_data.get('name')
-            user_name = form.cleaned_data.get('user_name')
             user_email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
             user: bool = User.objects.filter(email__iexact=user_email).exists()
@@ -40,7 +39,7 @@ class RegisterView(View):
             if user:
                 form.add_error('email', 'There is an email entered...')
             else:
-                new_user = User(email=user_email, username=user_name, email_active_code=get_random_string(72),
+                new_user = User(email=user_email, username=user_email, email_active_code=get_random_string(72),
                                 first_name=name, is_active=False)
                 new_user.set_password(password)
                 new_user.save()
@@ -52,7 +51,7 @@ class RegisterView(View):
 
 class ActivateAccount(View):
     def get(self, request, email_active_code):
-        user: User = User.objects.filter(email_active_code__iexact=email_active_code).first()
+        user = User.objects.filter(email_active_code__iexact=email_active_code).first()
         if user is not None:
             if not user.is_active:
                 user.is_active = True
@@ -80,17 +79,17 @@ class LoginView(View):
             return redirect(reverse('login-page'))
         return super().dispatch(request, *args, **kwargs)
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         form = self.form_class()
         return render(request, self.template_name, {'form': form})
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         form = self.form_class(request.POST)
         if form.is_valid():
             human = True
-            user_name = form.cleaned_data.get('user_name')
+            email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
-            user: User = User.objects.filter(username__iexact=user_name).first()
+            user = User.objects.filter(email__iexact=email).first()
             if user:
                 if not user.is_active:
                     form.add_error('email', 'your account is not active !!!')
@@ -100,7 +99,7 @@ class LoginView(View):
                     if is_password_currect:
                         login(request, user)
                         if self.next:
-                            return redirect(reverse('self.next'))
+                            return redirect('self.next')
                         return redirect(reverse('home-page'))
                     else:
                         form.add_error('password', 'The password is wrong !!!')
@@ -123,7 +122,7 @@ class ForgetPasswordView(View):
         form = self.form_class(request.POST)
         if form.is_valid():
             user_email = form.cleaned_data.get('email')
-            user: User = User.objects.filter(email__iexact=user_email).first()
+            user = User.objects.filter(email__iexact=user_email).first()
             if user:
                 send_email('reset password', user.email, {'user': user}, 'send_email/reset-password.html')
                 messages.success(request, 'check email please !')

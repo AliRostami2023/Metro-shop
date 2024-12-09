@@ -15,7 +15,7 @@ class ArticleAdmin(admin.ModelAdmin):
 
 @admin.register(models.CategoryBlog)
 class CategoryBlogAdmin(admin.ModelAdmin):
-    list_display = ['title', 'parent', 'published']
+    list_display = ['title', 'published']
     prepopulated_fields = {'url_title': ('title',)}
 
 

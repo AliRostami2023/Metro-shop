@@ -8,5 +8,5 @@ urlpatterns = [
     path('checkout/', views.CheckoutView.as_view(), name='checkout-cart'),
     path('coupon/', views.CouponOrderView.as_view(), name='coupon'),
     path('request-payment/<int:pk>', views.send_request, name='request'),
-    path('verify-payment/', views.verify, name='verify'),
+    path('verify-payment/', views.verify_payment, name='verify'),
 ]
