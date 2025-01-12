@@ -2,9 +2,8 @@ from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from account.models import User
 from product.models import Product
+from .context_processors import cart
 
-
-# Create your models here.
 
 
 class Order(models.Model):
@@ -27,8 +26,11 @@ class Order(models.Model):
     def __str__(self):
         return f"{self.user.get_full_name()}-{self.first_name}-{self.is_paid}"
     
-    def total(self):
-        total = sum()
+    def get_total(self):
+        cart_a = cart(self.request)
+        self.total_price = cart_a.total
+        return self.total_price
+
 
     class Meta:
         verbose_name = 'order'

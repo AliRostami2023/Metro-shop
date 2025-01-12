@@ -14,101 +14,95 @@ from product.models import Product
 
 
 
-ZIBAL_BASE_URL = "https://gateway.zibal.ir" if not settings.ZIBAL_SANDBOX else "https://sandbox.zibal.ir"
-ZIBAL_API_REQUEST = f"{ZIBAL_BASE_URL}/v1/request"
-ZIBAL_API_VERIFY = f"{ZIBAL_BASE_URL}/v1/verify"
-ZIBAL_API_STARTPAY = f"{ZIBAL_BASE_URL}/start/"
+
+from django.conf import settings
+import requests
+import json
 
 
-@login_required
-def send_request(request, pk):
-    order = Order.objects.get(id=pk, user=request.user)
-    product = Product.objects.get(id=pk)
-
-    # ذخیره اطلاعات در سشن برای استفاده در مرحله تأیید پرداخت
-    request.session['order_id'] == str(order.id)
-    request.session['product_id'] == str(product.id)
-
-    print(f"Session Order ID (after setting): {request.session.get('order_id')}")
-    print(f"Session Product ID (after setting): {request.session.get('product_id')}")
+#? sandbox merchant 
+if settings.SANDBOX:
+    sandbox = 'sandbox'
+else:
+    sandbox = 'www'
 
 
-    # URL بازگشت
-    callback_url = request.build_absolute_uri('/cart/verify-payment/')
-    print(f"Callback URL: {callback_url}")
+ZP_API_REQUEST = f"https://{sandbox}.zarinpal.com/pg/rest/WebGate/PaymentRequest.json"
+ZP_API_VERIFY = f"https://{sandbox}.zarinpal.com/pg/rest/WebGate/PaymentVerification.json"
+ZP_API_STARTPAY = f"https://{sandbox}.zarinpal.com/pg/StartPay/"
 
-    # داده‌های درخواست به زیبال
-    data = {
-        "merchant": settings.ZIBAL_MERCHANT,  # Merchant ID از تنظیمات
-        "amount": order.total_price,  # مبلغ به ریال
-        "callbackUrl": callback_url,  # URL بازگشت
-        "description": f"پرداخت سفارش شماره {order.id}",
-    }
-    try:
-        # ارسال درخواست به زیبال
-        response = requests.post(ZIBAL_API_REQUEST, json=data, timeout=10)
-        print(f"Zibal Request Data: {data}")
-        print(f"Zibal Response: {response.json()}")
+amount = 1000  # Rial / Required
+description = "توضیحات مربوط به تراکنش را در این قسمت وارد کنید"  # Required
+phone = 'YOUR_PHONE_NUMBER'  # Optional
+CallbackURL = 'http://127.0.0.1:8080/cart/verify/'
 
+
+class RequestPayment(View):
+    def post(self, request, pk, product_id):
+        order = get_object_or_404(Order, id=pk, user=request.user)
+        product = get_object_or_404(Product, id=product_id)
+        order.save()
+        product.save()
+
+        request.session['order_id'] = str(order.id)
+        request.session['product_id'] = str(product.id)
+
+        data = {
+            "MerchantID": settings.MERCHANT,
+            "Amount": order.total_price *10,
+            "Description": description,
+            "Phone": phone,
+            "CallbackURL": CallbackURL,
+        }
+        data = json.dumps(data)
+        headers = {'content-type': 'application/json', 'content-length': str(len(data)) }
+        try:
+            response = requests.post(ZP_API_REQUEST, data=data,headers=headers, timeout=10)
+
+            if response.status_code == 200:
+                response = response.json()
+                if response['Status'] == 100:
+                    return {'status': True, 'url': ZP_API_STARTPAY + str(response['Authority']), 'authority': response['Authority']}
+                else:
+                    return {'status': False, 'code': str(response['Status'])}
+            return response
     
-        if response.status_code == 200:
-            response_data = response.json()
-            if response_data["result"] == 100:  # موفقیت
-                return redirect(ZIBAL_API_STARTPAY + str(response_data["trackId"]))
-            else:
-                return HttpResponse(f"خطا در درخواست پرداخت: {response_data['message']}")
-        else:
-            return HttpResponse("خطا در اتصال به درگاه زیبال")
-    except requests.exceptions.RequestException as e:
-        return HttpResponse(f"خطا: {str(e)}")
+        except requests.exceptions.Timeout:
+            return {'status': False, 'code': 'timeout'}
+        except requests.exceptions.ConnectionError:
+            return {'status': False, 'code': 'connection error'}
 
 
 
-@login_required
-def verify_payment(request):
-    # دریافت مقادیر از سشن
-    order_id = request.session.get('order_id')
-    product_id = request.session.get('product_id')
-    track_id = request.GET.get("trackId")
+class VerifyPayment(View):
+    def get(self, request, authority):
+        order_id = request.session['order_id']
+        product_id = request.session['product_id']
 
-    print(f"Order ID: {order_id}")
-    print(f"Product ID: {product_id}")
-    print(f"Track ID: {track_id}")
+        order = Order.objects.get(id=int(order_id))
+        product = Product.objects.get(id=int(product_id))
 
-    if not order_id or not product_id or not track_id:
-        return HttpResponse("اطلاعات پرداخت ناقص است!")
-
-    # بازیابی سفارش و محصول
-    order = get_object_or_404(Order, id=int(order_id))
-    product = get_object_or_404(Product, id=int(product_id))
-
-    # داده‌های تأیید پرداخت
-    data = {
-        "merchant": settings.ZIBAL_MERCHANT,  # Merchant ID
-        "trackId": track_id,  # شناسه تراکنش
-    }
-
-    try:
-        # ارسال درخواست تأیید به زیبال
-        response = requests.post(ZIBAL_API_VERIFY, json=data, timeout=10)
+        data = {
+            "MerchantID": settings.MERCHANT,
+            "Amount": order.total_price * 10,
+            "Authority": authority,
+        }
+        data = json.dumps(data)
+        # set content length by data
+        headers = {'content-type': 'application/json', 'content-length': str(len(data)) }
+        response = requests.post(ZP_API_VERIFY, data=data,headers=headers)
 
         if response.status_code == 200:
-            response_data = response.json()
-            if response_data["result"] == 100:  # تأیید موفق
-                # بروزرسانی وضعیت سفارش و محصول
+            response = response.json()
+            if response['Status'] == 100:
                 order.is_paid = True
                 product.availability -= 1
                 order.save()
                 product.save()
-
-                return HttpResponse(f"پرداخت با موفقیت انجام شد. کد رهگیری: {response_data['refNumber']}")
+                return {'status': True, 'RefID': response['RefID']}
             else:
-                return HttpResponse(f"پرداخت ناموفق: {response_data['message']}")
-        else:
-            return HttpResponse("خطا در اتصال به سرویس تأیید پرداخت زیبال")
-    except requests.exceptions.RequestException as e:
-        return HttpResponse(f"خطا: {str(e)}")
-
+                return {'status': False, 'code': str(response['Status'])}
+        return response
 
 
 class CartDetail(View):
