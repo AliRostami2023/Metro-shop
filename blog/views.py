@@ -6,8 +6,6 @@ from django.views.generic import ListView
 from blog.models import Article, Comment, CategoryBlog
 
 
-# Create your views here.
-
 
 class BlogList(ListView):
     template_name = 'blog/blog-list.html'

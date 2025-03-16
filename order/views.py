@@ -1,6 +1,4 @@
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views import View
@@ -11,9 +9,6 @@ import requests
 from order.forms import CheckoutForm, CouponFormField
 from order.models import Order, OrderItem, Coupon
 from product.models import Product
-
-
-
 
 from django.conf import settings
 import requests
@@ -116,7 +111,7 @@ class CartDetail(View):
 
 
 class AddProduct(View):
-    def post(self, request: HttpRequest, pk):
+    def post(self, request, pk):
         product = Product.objects.get(id=pk)
         color, size, quantity = request.POST.get('color'), request.POST.get('size'), request.POST.get('p_quantity')
         cart = Cart(request)
@@ -135,12 +130,12 @@ class CheckoutView(LoginRequiredMixin, View):
     template_name = 'order/checkout.html'
     form_class = CheckoutForm
 
-    def get(self, request: HttpRequest):
+    def get(self, request):
         cart = Cart(request)
         form = self.form_class()
         return render(request, self.template_name, {'form': form, 'cart': cart})
 
-    def post(self, request: HttpRequest):
+    def post(self, request):
         cart = Cart(request)
         form = self.form_class(request.POST)
         if form.is_valid():

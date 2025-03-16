@@ -10,7 +10,7 @@ class RegisterForm(forms.Form):
     confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'confirm password'}), label='')
     captcha = CaptchaField()
 
-    def clean_confirm_password(self):
+    def clean(self):
         password = self.cleaned_data.get('password')
         confirm_password = self.cleaned_data.get('confirm_password')
 

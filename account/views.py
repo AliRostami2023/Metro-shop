@@ -31,9 +31,10 @@ class RegisterView(View):
         form = self.form_class(request.POST)
         if form.is_valid():
             human = True
-            name = form.cleaned_data.get('name')
-            user_email = form.cleaned_data.get('email')
-            password = form.cleaned_data.get('password')
+            cd = form.cleaned_data
+            name = cd.get('name')
+            user_email = cd.get('email')
+            password = cd.get('password')
             user: bool = User.objects.filter(email__iexact=user_email).exists()
 
             if user:
@@ -99,7 +100,7 @@ class LoginView(View):
                     if is_password_currect:
                         login(request, user)
                         if self.next:
-                            return redirect('self.next')
+                            return redirect(reverse('self.next'))
                         return redirect(reverse('home-page'))
                     else:
                         form.add_error('password', 'The password is wrong !!!')

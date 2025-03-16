@@ -14,8 +14,8 @@ from product.models import Product, Category, Brand, CommentProduct
 class ProductList(ListView):
     template_name = 'product/product-list.html'
     model = Product
-    # context_object_name = 'products'
     paginate_by = 8
+    # context_object_name = 'products'
 
     
     def get_queryset(self):

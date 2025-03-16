@@ -11,7 +11,6 @@ from order.models import Order
 from panel.forms import ChangePasswordUserForm, EditProfileModelForm
 
 
-# Create your views here.
 
 class ProfileView(LoginRequiredMixin, TemplateView):
     template_name = 'panel/profile.html'

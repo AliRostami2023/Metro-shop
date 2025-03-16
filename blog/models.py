@@ -5,8 +5,16 @@ from django.utils.html import format_html
 from account.models import User
 
 
+class CreateUpdateMixin(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
-class CategoryBlog(models.Model):
+    class Meta:
+        abstract = True
+
+
+
+class CategoryBlog(CreateUpdateMixin):
     title = models.CharField(max_length=300)
     url_title = models.CharField(max_length=350, unique=True, blank=True)
     image = models.ImageField(upload_to='uploads/blog_image', null=True, blank=True)
@@ -22,7 +30,7 @@ class CategoryBlog(models.Model):
         ordering = ['-created']
 
 
-class Article(models.Model):
+class Article(CreateUpdateMixin):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author_blog')
     category = models.ManyToManyField(CategoryBlog, related_name='category')
     title = models.CharField(max_length=500)
@@ -49,7 +57,7 @@ class Article(models.Model):
         ordering = ['-date']
 
 
-class Comment(models.Model):
+class Comment(CreateUpdateMixin):
     article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='article_comment')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_comment')
     parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='reply')

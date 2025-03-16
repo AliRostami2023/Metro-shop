@@ -8,8 +8,6 @@ from product.models import Category, Slider, Product, BannerSite
 from site_settings.models import Setting, FooterBox, FooterLink
 
 
-# Create your views here.
-
 
 class IndexView(TemplateView):
     template_name = 'home/index.html'
